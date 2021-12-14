@@ -1,10 +1,16 @@
-import { ReapitConnectSession } from '@reapit/connect-session'
-import { ListItemModel } from '@reapit/foundations-ts-definitions'
-import { URLS, BASE_HEADERS } from '../constants/api'
+import { ReapitConnectSession } from '@reapit/connect-session';
+import {
+  ListItemModel,
+  PropertyImageModel,
+  PropertyImageModelPagedResult,
+  PropertyModel,
+  PropertyModelPagedResult,
+} from '@reapit/foundations-ts-definitions';
+import { URLS, BASE_HEADERS } from '../constants/api';
 
 export const configurationAppointmentsApiService = async (
-  session: ReapitConnectSession,
-): Promise<ListItemModel[] | undefined> => {
+  session: ReapitConnectSession
+): Promise<Array<ListItemModel> | undefined> => {
   try {
     const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_APPOINTMENT_TYPES}`, {
       method: 'GET',
@@ -12,15 +18,134 @@ export const configurationAppointmentsApiService = async (
         ...BASE_HEADERS,
         Authorization: `Bearer ${session.accessToken}`,
       },
-    })
+    });
 
     if (response) {
-      const responseJson: Promise<ListItemModel[] | undefined> = response.json()
-      return responseJson
+      const responseJson: Promise<ListItemModel[]> = response.json();
+      return responseJson;
     }
 
-    throw new Error('No response returned by API')
+    throw new Error('No response returned by API');
   } catch (err) {
-    console.error('Error fetching Configuration Appointment Types', err)
+    console.error('Error fetching Configuration Appointment Types', err);
   }
-}
+};
+
+/**
+ * Properties Configuration
+ */
+export const configurationPropertiesApiService = async (
+  session: ReapitConnectSession
+): Promise<PropertyModelPagedResult | undefined> => {
+  try {
+    const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTIES_LIST}`, {
+      method: 'GET',
+      headers: {
+        ...BASE_HEADERS,
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (response) {
+      const responseJson: Promise<PropertyModelPagedResult> = response.json();
+      return responseJson;
+    }
+
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Properties List', err);
+  }
+};
+
+/**
+ * Property Detail appear on modal
+ */
+/**
+ * Properties Configuration
+ */
+export const configurationPropertyDetailApiService = async (
+  session: ReapitConnectSession,
+  idProperty: string | undefined
+): Promise<PropertyModel | undefined> => {
+  try {
+    const response = await fetch(
+      `${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTIES_LIST}${idProperty}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    );
+
+    if (response) {
+      const responseJson: Promise<PropertyModel> = response.json();
+
+      return responseJson;
+    }
+
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Property Model Details', err);
+  }
+};
+
+/**
+ * Get all properties images result
+ * @param session
+ * @param idProperty
+ * @returns
+ */
+export const configurationPropertiesImagesApiService = async (
+  session: ReapitConnectSession
+): Promise<PropertyImageModelPagedResult | undefined> => {
+  try {
+    const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTY_IMAGES}`, {
+      method: 'GET',
+      headers: {
+        ...BASE_HEADERS,
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (response) {
+      const responseJson: Promise<PropertyImageModelPagedResult> = response.json();
+      return responseJson;
+    }
+
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Property Model Details', err);
+  }
+};
+
+/**
+ * Get Property Image result
+ * @param session
+ * @param idProperty
+ * @returns
+ */
+export const configurationPropertyImagesApiService = async (
+  session: ReapitConnectSession,
+  uriParams: string | undefined
+): Promise<PropertyImageModel | undefined> => {
+  try {
+    const response = await fetch(`${window.reapit.config.platformApiUrl}${uriParams}`, {
+      method: 'GET',
+      headers: {
+        ...BASE_HEADERS,
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (response) {
+      const responseJson: Promise<PropertyImageModel> = response.json();
+      return responseJson;
+    }
+
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Property Model Details', err);
+  }
+};

@@ -1,10 +1,13 @@
-import React from 'react'
-import { useReapitConnect } from '@reapit/connect-session'
-import { reapitConnectBrowserSession } from '../../core/connect-session'
-import { NavResponsive } from '@reapit/elements'
+import React, { FC } from 'react';
+import { useReapitConnect } from '@reapit/connect-session';
+import { reapitConnectBrowserSession } from '../../core/connect-session';
 
-export const Nav: React.FC = () => {
-  const { connectLogoutRedirect } = useReapitConnect(reapitConnectBrowserSession)
+import { NavResponsive } from '@reapit/elements';
+
+export const Nav: FC = () => {
+  const { connectLogoutRedirect } = useReapitConnect(
+    reapitConnectBrowserSession
+  );
 
   return (
     <NavResponsive
@@ -14,7 +17,7 @@ export const Nav: React.FC = () => {
         },
         {
           itemIndex: 1,
-          href: window.reapit.config.marketplaceUrl,
+          href: 'google.com',
           iconId: 'appsMenu',
           text: 'Apps',
         },
@@ -27,7 +30,7 @@ export const Nav: React.FC = () => {
         },
       ]}
     />
-  )
-}
+  );
+};
 
-export default Nav
+export default Nav;
