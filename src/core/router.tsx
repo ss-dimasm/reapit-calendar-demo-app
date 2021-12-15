@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Route,
-  Router as BrowserRouter,
-  Switch,
-  Redirect,
-} from 'react-router-dom';
+import { Route, Router as BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
 import Routes from '../constants/routes';
 import PrivateRouteWrapper from './private-route-wrapper';
@@ -33,15 +28,11 @@ export const catchChunkError = (
   });
 };
 
-const LoginPage = React.lazy(() =>
-  catchChunkError(() => import('../components/pages/login'))
-);
-const AuthenticatedPage = React.lazy(() =>
-  catchChunkError(() => import('../components/pages/authenticated'))
-);
-const PropertiesPage = React.lazy(() =>
-  catchChunkError(() => import('../components/pages/properties'))
-);
+const LoginPage = React.lazy(() => catchChunkError(() => import('../components/pages/login')));
+const AuthenticatedPage = React.lazy(() => catchChunkError(() => import('../components/pages/authenticated')));
+const PropertiesPage = React.lazy(() => catchChunkError(() => import('../components/pages/properties')));
+const CompanyPage = React.lazy(() => catchChunkError(() => import('../components/pages/companies')));
+
 const Router = () => (
   <BrowserRouter history={history}>
     <React.Suspense fallback={null}>
@@ -49,6 +40,7 @@ const Router = () => (
         <Route path={Routes.LOGIN} component={LoginPage} />
         <PrivateRouteWrapper>
           <Switch>
+            <Route path={Routes.COMPANY} component={CompanyPage} />
             <Route path={Routes.PROPERTIES} component={PropertiesPage} />
             <Route path={Routes.HOME} component={AuthenticatedPage} />
           </Switch>

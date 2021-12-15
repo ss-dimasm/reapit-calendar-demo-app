@@ -1,11 +1,13 @@
 import { ReapitConnectSession } from '@reapit/connect-session';
 import {
+  CompanyModelPagedResult,
   ListItemModel,
   PropertyImageModel,
   PropertyImageModelPagedResult,
   PropertyModel,
   PropertyModelPagedResult,
 } from '@reapit/foundations-ts-definitions';
+
 import { URLS, BASE_HEADERS } from '../constants/api';
 
 export const configurationAppointmentsApiService = async (
@@ -147,5 +149,39 @@ export const configurationPropertyImagesApiService = async (
     throw new Error('No response returned by API');
   } catch (err) {
     console.error('Error fetching Property Model Details', err);
+  }
+};
+
+/**
+ * Get all resource from Company
+ */
+export const configurationCompaniesApiServices = async (
+  session: ReapitConnectSession,
+  page?: number
+): Promise<CompanyModelPagedResult | undefined> => {
+  let fixUri: string;
+
+  if (page === undefined) {
+    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.ALL}`;
+  } else {
+    fixUri = `${window.reapit.config.platformApiUrl}${page}`;
+  }
+
+  try {
+    const response = await fetch(`${fixUri}`, {
+      method: 'GET',
+      headers: {
+        ...BASE_HEADERS,
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (response) {
+      const responseJson: Promise<CompanyModelPagedResult> = response.json();
+      return responseJson;
+    }
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Companies Pages Result', err);
   }
 };
