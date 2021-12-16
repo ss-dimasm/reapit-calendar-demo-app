@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import { CompanyModelPagedResult } from '@reapit/foundations-ts-definitions';
 import { TableCell, TableRow, Button } from '@reapit/elements';
 
-// indexed access CompanyModelPagesResult Interface
+// indexing _embedded from CompanyModelPagesResult Interface
 type EmbeddedCompanyModelPagedResult = {
   data: CompanyModelPagedResult['_embedded'];
 };
 
-const ListCompaniesData = ({ data }: EmbeddedCompanyModelPagedResult) => {
+const ListCompaniesData: FC<EmbeddedCompanyModelPagedResult> = (
+  props: EmbeddedCompanyModelPagedResult
+): ReactElement => {
+  const { data } = props;
   return (
     <>
       {data?.map((company) => {
@@ -18,9 +21,7 @@ const ListCompaniesData = ({ data }: EmbeddedCompanyModelPagedResult) => {
             <TableCell>{name}</TableCell>
             <TableCell>{branch}</TableCell>
             <TableCell>
-              <Button fullWidth={true} intent='primary'>
-                More Information
-              </Button>
+              <Button intent='primary'>More Information</Button>
             </TableCell>
           </TableRow>
         );

@@ -157,16 +157,20 @@ export const configurationPropertyImagesApiService = async (
  */
 export const configurationCompaniesApiServices = async (
   session: ReapitConnectSession,
-  page?: number
+  page?: number,
+  idCompany?: string | number
 ): Promise<CompanyModelPagedResult | undefined> => {
   let fixUri: string;
 
-  if (page === undefined) {
+  if (idCompany !== undefined) {
+    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.SINGLE_COMPANY}${idCompany}`;
+  } else if (page === undefined) {
     fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.ALL}`;
   } else {
     fixUri = `${window.reapit.config.platformApiUrl}${page}`;
   }
 
+  console.log(fixUri);
   try {
     const response = await fetch(`${fixUri}`, {
       method: 'GET',
