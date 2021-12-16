@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { FC, ReactElement } from 'react';
 import { TableHeader, TableHeadersRow } from '@reapit/elements';
 
 type ListCompaniesHeadersProps = {
   titles: string[];
 };
 
-const ListCompaniesHeaders = ({ titles }: ListCompaniesHeadersProps) => {
+const ListCompaniesHeaders: FC<ListCompaniesHeadersProps> = (props: ListCompaniesHeadersProps): ReactElement => {
+  const { titles } = props;
   return (
     <>
       <TableHeadersRow>

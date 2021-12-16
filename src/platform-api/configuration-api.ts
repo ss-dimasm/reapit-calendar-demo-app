@@ -170,7 +170,6 @@ export const configurationCompaniesApiServices = async (
     fixUri = `${window.reapit.config.platformApiUrl}${page}`;
   }
 
-  console.log(fixUri);
   try {
     const response = await fetch(`${fixUri}`, {
       method: 'GET',

@@ -39,6 +39,7 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
   const [companiesSearchId, setCompaniesSearchId] = useState<SearchCompaniesByIdProps>();
 
   const { info } = useSnack();
+
   // called if the companies Data Page is changed
   useEffect(() => {
     const fetchCompaniesDataAgain = async (): Promise<CompaniesModelPagedVamp> => {
@@ -51,6 +52,7 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
 
       if (serviceResponse) {
         setCompaniesData(serviceResponse);
+        console.log(serviceResponse);
       }
     };
 
@@ -66,7 +68,7 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
   }
 
   // titles items for table headers
-  const titles = ['ID', 'Name', 'Branch', 'Action'];
+  const titles = ['ID', 'Name', 'Branch', 'Status', 'Action'];
 
   // onChange pagination handler
   const onChangePaginationHandler = (type: OnChangePaginationHandlerProps): void => {
@@ -90,8 +92,12 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
 
   // search companies by id
   const searchCompanyByIdFn = (id: SearchCompaniesByIdProps): void => {
-    info(`Searching Company with ID: ${id}`);
-    setCompaniesSearchId(id);
+    if (id) {
+      info(`Searching Company with ID: ${id}`);
+      setCompaniesSearchId(id);
+    } else {
+      info(`Please input an ID`);
+    }
   };
 
   // use snack
