@@ -6,6 +6,7 @@ import {
   PropertyImageModelPagedResult,
   PropertyModel,
   PropertyModelPagedResult,
+  StaffModelPagedResult,
 } from '@reapit/foundations-ts-definitions';
 
 import { URLS, BASE_HEADERS } from '../constants/api';
@@ -181,6 +182,32 @@ export const configurationCompaniesApiServices = async (
 
     if (response) {
       const responseJson: Promise<CompanyModelPagedResult> = response.json();
+      return responseJson;
+    }
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Companies Pages Result', err);
+  }
+};
+
+export const configurationCompaniesEmployeeApiServices = async (
+  session: ReapitConnectSession,
+  idCompany?: string | number
+): Promise<StaffModelPagedResult | undefined> => {
+  try {
+    const response = await fetch(
+      `${`${window.reapit.config.platformApiUrl}${URLS.COMPANIES.SINGLE_COMPANY}${idCompany}/staffMembers`}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    );
+
+    if (response) {
+      const responseJson: Promise<StaffModelPagedResult> = response.json();
       return responseJson;
     }
     throw new Error('No response returned by API');

@@ -24,13 +24,13 @@ import PagedPaginationResult from '../ui/PagedPaginationResult';
 import SidebarCompanies from '../ui/companies/SidebarCompanies';
 
 type CompaniesProps = {};
-type CompaniesModelPagedVamp = CompanyModelPagedResult | undefined;
+export type CompaniesModelPagedVamp = CompanyModelPagedResult | undefined;
 type CompaniesDataPage = string | number | any;
 type CompaniesDataPageUriProps = Exclude<CompaniesDataPage, number>;
 type OnChangePaginationHandlerProps = 'next' | 'prev';
 type SearchCompaniesByIdProps = string | undefined;
 
-const Companies: FC<CompaniesProps> = (): ReactElement => {
+const Companies: FC<CompaniesProps> = (props): ReactElement => {
   const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
 
   const [companiesData, setCompaniesData] = useState<CompaniesModelPagedVamp>();
@@ -52,7 +52,6 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
 
       if (serviceResponse) {
         setCompaniesData(serviceResponse);
-        console.log(serviceResponse);
       }
     };
 
@@ -99,8 +98,6 @@ const Companies: FC<CompaniesProps> = (): ReactElement => {
       info(`Please input an ID`);
     }
   };
-
-  // use snack
 
   return (
     <>
