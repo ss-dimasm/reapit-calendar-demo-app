@@ -32,6 +32,7 @@ const LoginPage = React.lazy(() => catchChunkError(() => import('../components/p
 const AuthenticatedPage = React.lazy(() => catchChunkError(() => import('../components/pages/authenticated')));
 const PropertiesPage = React.lazy(() => catchChunkError(() => import('../components/pages/properties')));
 const CompanyPage = React.lazy(() => catchChunkError(() => import('../components/pages/companies')));
+const CalendarPage = React.lazy(() => catchChunkError(() => import('../components/pages/calendar')));
 
 const Router = () => (
   <BrowserRouter history={history}>
@@ -42,6 +43,7 @@ const Router = () => (
           <Switch>
             <Route path={Routes.COMPANY} component={CompanyPage} />
             <Route path={Routes.PROPERTIES} component={PropertiesPage} />
+            <Route path={Routes.CALENDAR} component={CalendarPage} />
             <Route path={Routes.HOME} component={AuthenticatedPage} />
           </Switch>
         </PrivateRouteWrapper>

@@ -21,13 +21,18 @@ export const Nav: FC = () => {
         },
         {
           itemIndex: 2,
-          href: 'company',
-          isSecondary: true,
+          href: '/company',
           iconId: 'dataMenu',
           text: 'Company',
         },
         {
-          itemIndex: 3,
+          itemIndex: 4,
+          href: '/calendar',
+          iconId: 'mapMenu',
+          text: 'AppointIn',
+        },
+        {
+          itemIndex: 5,
           callback: connectLogoutRedirect,
           isSecondary: true,
           iconId: 'logoutMenu',

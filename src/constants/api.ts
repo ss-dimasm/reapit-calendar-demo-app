@@ -11,4 +11,7 @@ export const URLS = {
     ALL: '/companies',
     SINGLE_COMPANY: '/companies/',
   },
+  PROPERTIES: {
+    PAGED: '/properties',
+  },
 };

@@ -3,6 +3,7 @@ const Routes = {
   LOGIN: '/login',
   PROPERTIES: '/properties',
   COMPANY: '/company',
+  CALENDAR: '/calendar',
 };
 
 export default Routes;

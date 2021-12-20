@@ -10,8 +10,8 @@ const SidebarCompanies: FC<SidebarCompaniesProps> = (props: SidebarCompaniesProp
   const [companiesStatId, setCompaniesStatId] = useState<string | undefined>();
 
   // change state
-  const changeIdStat = (ev): void => {
-    const value = ev.target.value;
+  const changeIdStat = (ev: React.FormEvent<HTMLInputElement>): void => {
+    const value = ev.currentTarget.value;
     setCompaniesStatId(value);
   };
 

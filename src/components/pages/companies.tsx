@@ -24,11 +24,12 @@ import PagedPaginationResult from '../ui/PagedPaginationResult';
 import SidebarCompanies from '../ui/companies/SidebarCompanies';
 
 type CompaniesProps = {};
-export type CompaniesModelPagedVamp = CompanyModelPagedResult | undefined;
 type CompaniesDataPage = string | number | any;
 type CompaniesDataPageUriProps = Exclude<CompaniesDataPage, number>;
 type OnChangePaginationHandlerProps = 'next' | 'prev';
 type SearchCompaniesByIdProps = string | undefined;
+
+export type CompaniesModelPagedVamp = CompanyModelPagedResult | undefined;
 
 const Companies: FC<CompaniesProps> = (props): ReactElement => {
   const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
@@ -67,7 +68,7 @@ const Companies: FC<CompaniesProps> = (props): ReactElement => {
   }
 
   // titles items for table headers
-  const titles = ['ID', 'Name', 'Branch', 'Status', 'Action'];
+  const titles = ['ID', 'Name', 'Branch', 'Action'];
 
   // onChange pagination handler
   const onChangePaginationHandler = (type: OnChangePaginationHandlerProps): void => {
