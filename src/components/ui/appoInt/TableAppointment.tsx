@@ -3,13 +3,14 @@ import React, { FC, ReactElement } from 'react';
 import { Table } from '@reapit/elements';
 
 import { PropertyModelPagedResultVamp, SearchParamsType } from '../../pages/calendar';
+import SubTableAppointment from './SubTableAppointment';
 
 type TableAppointmentProps = {
-  propertyData?: PropertyModelPagedResultVamp; // soon will be data that matched
-  searchParams?: SearchParamsType;
+  propertyData: PropertyModelPagedResultVamp;
+  searchParams: SearchParamsType;
 };
 
-const TableAppointment: FC<TableAppointmentProps> = (props: TableAppointmentProps): ReactElement => {
+const TableAppointment: FC<TableAppointmentProps> = (props): ReactElement => {
   const { propertyData } = props;
 
   const propertiesDetailDatas = new Array();
@@ -52,15 +53,13 @@ const TableAppointment: FC<TableAppointmentProps> = (props: TableAppointmentProp
           },
         ],
         expandableContent: {
-          content: <p>I am the content that is only visible when expanded</p>,
+          content: <SubTableAppointment id={property.id} description={property.description} />,
         },
       };
 
       propertiesDetailDatas.push(data);
     });
   }
-
-  console.log(propertyData);
 
   return (
     <Table

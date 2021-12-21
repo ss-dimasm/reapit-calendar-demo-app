@@ -16,6 +16,7 @@ export const mockLoginIdentity = {
   officeId: 'MVK',
   orgProduct: 'agencyCloud',
 };
+
 export const mockBrowserSession: ReapitConnectSession = {
   accessToken: JSON.stringify({
     exp: Math.round(new Date().getTime() / 1000) + 360, // time now + 6mins - we refresh session if expiry within 5mins

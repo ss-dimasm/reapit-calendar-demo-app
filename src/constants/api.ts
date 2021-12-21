@@ -14,4 +14,7 @@ export const URLS = {
   PROPERTIES: {
     PAGED: '/properties',
   },
+  APPOINTMENT: {
+    PAGED: '/appointments',
+  },
 };

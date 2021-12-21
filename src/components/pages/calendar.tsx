@@ -45,18 +45,20 @@ const Calendar: FC<CalendarProps> = (): ReactElement => {
   }, [connectSession, searchParams, currentPageNumber]);
 
   // Search Property Button
-  const searchNewList = (params) => {
+  const searchNewList = (params): void => {
     setSearchParams(params);
   };
 
   /**
-   * Render
+   * Render Section
    */
 
+  // while properties data is still load / unavailable
   if (propertiesData === undefined) {
-    return <Loader label='Wait' />;
+    return <Loader label='Wait' fullPage />;
   }
 
+  // while properties data is not available
   if (propertiesData?.totalCount === 0) {
     return (
       <>
@@ -66,6 +68,7 @@ const Calendar: FC<CalendarProps> = (): ReactElement => {
     );
   }
 
+  // while properties data is ready
   return (
     <>
       <SearchBar searchNewParams={searchNewList} />
