@@ -53,7 +53,13 @@ const TableAppointment: FC<TableAppointmentProps> = (props): ReactElement => {
           },
         ],
         expandableContent: {
-          content: <SubTableAppointment id={property.id} description={property.description} />,
+          content: (
+            <SubTableAppointment
+              propertyId={property.id}
+              negoId={property.negotiatorId}
+              description={property.description}
+            />
+          ),
         },
       };
 

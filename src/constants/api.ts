@@ -12,9 +12,17 @@ export const URLS = {
     SINGLE_COMPANY: '/companies/',
   },
   PROPERTIES: {
+    SINGLE: '/properties/',
     PAGED: '/properties',
+  },
+  PROPERTY_IMAGES: {
+    PAGED: '/propertyImages/',
   },
   APPOINTMENT: {
     PAGED: '/appointments',
+  },
+  NEGOTIATOR: {
+    SINGLE: '/negotiators/',
+    PAGED: '/negotiators',
   },
 };

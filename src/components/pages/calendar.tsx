@@ -49,10 +49,6 @@ const Calendar: FC<CalendarProps> = (): ReactElement => {
     setSearchParams(params);
   };
 
-  /**
-   * Render Section
-   */
-
   // while properties data is still load / unavailable
   if (propertiesData === undefined) {
     return <Loader label='Wait' fullPage />;

@@ -1,6 +1,10 @@
 import { ReapitConnectSession } from '@reapit/connect-session';
 
-import { PropertyModelPagedResult } from '@reapit/foundations-ts-definitions';
+import {
+  PropertyImageModelPagedResult,
+  PropertyModel,
+  PropertyModelPagedResult,
+} from '@reapit/foundations-ts-definitions';
 
 import { URLS, BASE_HEADERS } from '../constants/api';
 
@@ -28,6 +32,58 @@ export const getListingsOfProperties = async (
 
     if (response) {
       const responseJson: Promise<PropertyModelPagedResult> = response.json();
+      return responseJson;
+    }
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Properties Pages Result', err);
+  }
+};
+
+/**
+ * Get property data by id
+ */
+export const getPropertyDataByPropertyId = async (
+  session: ReapitConnectSession,
+  propertyId
+): Promise<PropertyModel | undefined> => {
+  try {
+    const response = await fetch(`${`${window.reapit.config.platformApiUrl}${URLS.PROPERTIES.SINGLE}${propertyId}`}`, {
+      method: 'GET',
+      headers: {
+        ...BASE_HEADERS,
+        Authorization: `Bearer ${session.accessToken}`,
+      },
+    });
+
+    if (response) {
+      const responseJson: Promise<PropertyModel> = response.json();
+      return responseJson;
+    }
+    throw new Error('No response returned by API');
+  } catch (err) {
+    console.error('Error fetching Properties Pages Result', err);
+  }
+};
+
+export const getPropertyImagesByPropertyId = async (
+  session: ReapitConnectSession,
+  propertyId
+): Promise<PropertyImageModelPagedResult | undefined> => {
+  try {
+    const response = await fetch(
+      `${`${window.reapit.config.platformApiUrl}${URLS.PROPERTY_IMAGES.PAGED}?propertyId=${propertyId}`}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    );
+
+    if (response) {
+      const responseJson: Promise<PropertyImageModelPagedResult> = response.json();
       return responseJson;
     }
     throw new Error('No response returned by API');

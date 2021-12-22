@@ -1,89 +1,61 @@
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement } from 'react';
 
-import { Loader } from '@reapit/elements';
-import { AppointmentModelPagedResult } from '@reapit/foundations-ts-definitions';
-
-import { Event, Calendar, Views, momentLocalizer, SlotInfo } from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-import moment from 'moment';
+import { AppointmentModelPagedResult, NegotiatorModel, PropertyModel } from '@reapit/foundations-ts-definitions';
+import {
+  ChangeCurrentStepType,
+  ModalStatsType,
+  UserInfoType,
+  UserInfoTypeProps,
+  UserPurposeProps,
+} from './SubTableAppointment';
+import ModalDetail from './modal/ModalDetail';
+import ModalIdentity from './modal/ModalIdentity';
+import ModalCalendar from './modal/ModalCalendar';
 
 type ModalAppointmentDataProps = {
-  events?: AppointmentModelPagedResult['_embedded'] | undefined;
+  modalStats: ModalStatsType;
+  propertyId: PropertyModel['id'];
+  negotiatorId: NegotiatorModel['id'];
+  events: AppointmentModelPagedResult['_embedded'] | undefined;
+  userInfo: UserInfoTypeProps;
+  changeStep: (status: ChangeCurrentStepType) => void;
   setReservedModalOpen: (data) => void;
+  changeUserInfo: (data: UserInfoType) => void;
+  userPurpose: (data: UserPurposeProps) => void;
 };
 
 const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement => {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [appointmentAvailableDate, setAppointmentAvailableDate] = useState<Event[]>([]);
+  // desctruc props
+  const { propertyId, negotiatorId, modalStats, events, changeStep, changeUserInfo, userInfo, userPurpose } = props;
 
-  const { events, setReservedModalOpen } = props;
-
-  useEffect(() => {
-    if (events) {
-      const newData = events.map((event) => {
-        return {
-          id: event.id ?? '',
-          title: event.description,
-          start: new Date(event.start ?? ''),
-          end: new Date(event.end ?? ''),
-          resource: {
-            tag: event._eTag,
-            id: event.id,
-            viewType: event.typeId,
-          },
-        };
-      });
-      setAppointmentAvailableDate(newData);
-      setIsLoading(false);
-    }
-  }, [events]);
-
-  const localizer = momentLocalizer(moment);
-
-  if (isLoading) {
-    return (
-      <>
-        <div className='el-flex el-flex-justify-center'>
-          <Loader label='Getting some information..' />
-        </div>
-      </>
-    );
+  // first here to identity the property and negotiator
+  if (modalStats === 'details') {
+    return <ModalDetail negotiatorId={negotiatorId} propertyId={propertyId} changeStep={changeStep} />;
   }
 
-  const reservingNewAppointment = (event: SlotInfo) => {
-    const data = {
-      id: '12312',
-      title: 'New Applicants',
-      start: new Date(event.start),
-      end: new Date(event.end),
-      resource: {
-        type: 'new',
-      },
-    };
-    setReservedModalOpen(data);
-  };
+  // fill up the form
+  if (modalStats === 'identity') {
+    return <ModalIdentity changeStep={changeStep} changeUserInfo={changeUserInfo} />;
+  }
 
+  console.log(userInfo);
+  // choosing date
+  if (modalStats === 'reserving') {
+    return <ModalCalendar events={events} changeStep={changeStep} userInfo={userInfo} userPurpose={userPurpose} />;
+    // set name of applicants
+    // appear the calendar to get appointment
+  }
+
+  // summary result, if button pressed then will appear new receipt
   return (
-    <div>
-      <Calendar
-        selectable
-        localizer={localizer}
-        events={appointmentAvailableDate}
-        startAccessor='start'
-        endAccessor='end'
-        defaultDate={new Date(Date.now())}
-        defaultView={Views.DAY}
-        style={{ height: 500 }}
-        views={['month', 'week', 'day']}
-        step={30}
-        timeslots={12}
-        dayLayoutAlgorithm='no-overlap'
-        onSelectSlot={reservingNewAppointment}
-        onSelectEvent={(event) => console.log(event)}
-      />
-    </div>
+    <>
+      <p>give the details that already reserving</p>
+      <p>like: meet at...</p>
+      <p>like: when</p>
+      <p>and give details in JSON file</p>
+    </>
   );
+  // get details information, able to confirm it
 };
 
 export default ModalAppointment;

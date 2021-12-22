@@ -1,69 +1,124 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 
-import { Button, CardHeading, CardHeadingWrap, CardWrap, FlexContainer, useModal } from '@reapit/elements';
+import { Button, CardHeading, CardHeadingWrap, CardWrap, FlexContainer, Steps, useModal } from '@reapit/elements';
 import { AppointmentModelPagedResult, PropertyModel } from '@reapit/foundations-ts-definitions';
 import { useReapitConnect } from '@reapit/connect-session';
 
-import ModalAppointment from './ModalAppointment';
+import { Event } from 'react-big-calendar';
 
 import { reapitConnectBrowserSession } from '../../../core/connect-session';
-import { getListOfAppointmentsByPropertyId } from '../../../platform-api/appointmentsResource';
-import { SlotInfo, Event } from 'react-big-calendar';
+import { getAppointmentDateByNegotiatorId } from '../../../platform-api/negotiatorResource';
+import ModalAppointment from './ModalAppointment';
+import Spacer from '../Spacer';
 
 type SubTableAppointmentProps = {
-  id: PropertyModel['id'];
-  description: PropertyModel['description'] | any;
+  propertyId: PropertyModel['id'];
+  negoId: PropertyModel['negotiatorId'];
+  description: PropertyModel['description'];
 };
-
-type ModalStatsType = 'open' | 'reserving';
-
-const SubTableAppointment: FC<SubTableAppointmentProps> = (props: SubTableAppointmentProps): ReactElement => {
+export type UserInfoType = {
+  name: string | undefined;
+  email: string | undefined;
+  phone: string | number | undefined;
+  purpose: string | undefined;
+};
+type NegotiatorType = string | undefined;
+type AppointmentModelPagedResultVamp = AppointmentModelPagedResult | undefined;
+type CurrentStepType = string;
+export type ChangeCurrentStepType = 'forward' | 'backward';
+export type ModalStatsType = 'details' | 'identity' | 'reserving' | 'summary';
+export type UserInfoTypeProps = UserInfoType | undefined;
+export type UserPurposeProps = string | undefined;
+/**
+ * main Logic from Modal Content
+ */
+const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement => {
   const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
+  const { propertyId, negoId, description } = props;
 
-  const { id, description } = props;
-
-  const [propertyId, setPropertyId] = useState<string | undefined>(undefined);
-  const [appointmentProperty, setAppointmentProperty] = useState<AppointmentModelPagedResult | undefined>();
+  const [negotiatorId, setNegotiatorId] = useState<NegotiatorType>(undefined);
+  const [appointmentProperty, setAppointmentProperty] = useState<AppointmentModelPagedResultVamp>();
   const [reservedEvent, setReservedEvent] = useState<Event>();
-  const [modalStats, setModalStats] = useState<ModalStatsType>('open');
+  const [modalStats, setModalStats] = useState<ModalStatsType>('details');
+  const [currentStep, setCurrentStep] = useState<CurrentStepType>('1');
+  const [userInfo, setUserInfo] = useState<UserInfoTypeProps>(undefined);
+  const [userPurpose, setUserPurpose] = useState<UserPurposeProps>(undefined);
 
+  // Modal Config
   const { Modal: ModalA, openModal: openModalA, closeModal: closeModalA } = useModal('root');
-  const { Modal: ModalB, openModal: openModalB, closeModal: closeModalB } = useModal('root');
 
   // fetch appointment by property id
   useEffect(() => {
-    if (!propertyId) return; //prevent consume endpoint, if the propertyId is undefined
+    if (!negotiatorId) return; //prevent consume endpoint, if the negotiatorId is undefined
 
-    const fetchAppointmentProperty = async (): Promise<AppointmentModelPagedResult | undefined> => {
+    const fetchAppointmentProperty = async (): Promise<AppointmentModelPagedResultVamp> => {
       if (!connectSession) return;
-      const serviceResponse = await getListOfAppointmentsByPropertyId(connectSession, propertyId);
+      const serviceResponse = await getAppointmentDateByNegotiatorId(connectSession, negotiatorId);
 
-      if (serviceResponse) setAppointmentProperty(serviceResponse);
+      if (serviceResponse) {
+        setAppointmentProperty(serviceResponse);
+      }
     };
 
     if (connectSession) fetchAppointmentProperty();
-  }, [connectSession, propertyId]);
+  }, [connectSession, negotiatorId]);
 
   //   toggle active modal
-  const openModalProperty = (id: SubTableAppointmentProps['id']): void => {
+  const openModalProperty = (id: SubTableAppointmentProps['negoId']): void => {
     openModalA();
-    setPropertyId(id);
+    setNegotiatorId(id);
+    setCurrentStep('1');
   };
 
-  //   toggle close modal
+  //   toggle close modal (reset everything)
   const closeModalProperty = (): void => {
     closeModalA();
-    setPropertyId(undefined);
+    setNegotiatorId(undefined);
     setAppointmentProperty(undefined);
-    setModalStats('open');
+    setModalStats('details');
+    setCurrentStep('1');
+    setUserInfo(undefined);
   };
 
   //   toggle reserved
   const openReservedCalendar = (data): void => {
     setReservedEvent(data);
-    setModalStats('reserving');
-    console.log(data);
+    setModalStats('details');
     // make new view with new negotiator
+  };
+
+  // change step and modal stats
+  const toggleChangeStep = (status: ChangeCurrentStepType): void => {
+    let currentStepInt = parseInt(currentStep);
+    switch (status) {
+      case 'forward':
+        currentStepInt++;
+        let currentStepStr = currentStepInt.toString();
+        setCurrentStep(currentStepStr);
+        // change the modal stats
+        if (modalStats === 'details') setModalStats('identity');
+        if (modalStats === 'identity') setModalStats('reserving');
+        if (modalStats === 'reserving') setModalStats('summary');
+        break;
+      case 'backward':
+        currentStepInt--;
+        currentStepStr = currentStepInt.toString();
+        setCurrentStep(currentStepStr);
+        if (modalStats === 'reserving') setModalStats('details');
+        if (modalStats === 'identity') setModalStats('reserving');
+        if (modalStats === 'summary') setModalStats('identity');
+        break;
+    }
+  };
+
+  // change user info
+  const changeUserInfo = (data: UserInfoType): void => {
+    setUserInfo(data);
+  };
+
+  // change user purpose at reserving date
+  const changeUserPurpose = (data: UserPurposeProps): void => {
+    setUserPurpose(data);
   };
 
   return (
@@ -77,21 +132,29 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props: SubTableAppoin
               dangerouslySetInnerHTML={{ __html: description ?? 'Description unavailable' }}
             />
           </CardHeadingWrap>
-          <Button className='el-ml6' intent='secondary' onClick={() => openModalProperty(id)}>
+          <Button className='el-ml6' intent='secondary' onClick={() => openModalProperty(negoId)}>
             Book Now
           </Button>
         </FlexContainer>
       </CardWrap>
-      <ModalA title='Appointment Title Template' onModalClose={closeModalProperty}>
-        {modalStats === 'open' ? (
-          <ModalAppointment events={appointmentProperty?._embedded} setReservedModalOpen={openReservedCalendar} />
-        ) : (
-          <>
-            <p>make new modal with reserved event data here (including the calendar and the form for user)</p>
-            <p>do fetch data from negotiator (with property id state)</p>
-            <p>make new button, with callback new JSOn data</p>
-          </>
-        )}
+      <ModalA title='Reserving' onModalClose={closeModalProperty}>
+        <div className='el-mb6 el-flex el-flex-justify-center'>
+          <Steps steps={['1', '2', '3', '4']} selectedStep={currentStep} />
+        </div>
+        <Spacer number={10} />
+        <div className='el-mt6'>
+          <ModalAppointment
+            changeStep={toggleChangeStep}
+            propertyId={propertyId}
+            negotiatorId={negotiatorId}
+            modalStats={modalStats}
+            events={appointmentProperty?._embedded}
+            setReservedModalOpen={openReservedCalendar}
+            changeUserInfo={changeUserInfo}
+            userInfo={userInfo}
+            userPurpose={changeUserPurpose}
+          />
+        </div>
       </ModalA>
     </>
   );
