@@ -1,9 +1,12 @@
 import React, { FC, ReactElement } from 'react';
 
-import { AppointmentModelPagedResult, NegotiatorModel, PropertyModel } from '@reapit/foundations-ts-definitions';
+import { AppointmentModelPagedResult, NegotiatorModel } from '@reapit/foundations-ts-definitions';
 import {
+  AppointmentDateProps,
   ChangeCurrentStepType,
   ModalStatsType,
+  PropertyDataType,
+  PropertyImageDataType,
   UserInfoType,
   UserInfoTypeProps,
   UserPurposeProps,
@@ -11,51 +14,79 @@ import {
 import ModalDetail from './modal/ModalDetail';
 import ModalIdentity from './modal/ModalIdentity';
 import ModalCalendar from './modal/ModalCalendar';
+import ModalSummary from './modal/ModalSummary';
 
 type ModalAppointmentDataProps = {
   modalStats: ModalStatsType;
-  propertyId: PropertyModel['id'];
-  negotiatorId: NegotiatorModel['id'];
+  propertyData: PropertyDataType;
+  propertyImageData: PropertyImageDataType;
+  negotiatorData: NegotiatorModel | undefined;
   events: AppointmentModelPagedResult['_embedded'] | undefined;
   userInfo: UserInfoTypeProps;
+  appointmentDateData: AppointmentDateProps;
   changeStep: (status: ChangeCurrentStepType) => void;
-  setReservedModalOpen: (data) => void;
   changeUserInfo: (data: UserInfoType) => void;
   userPurpose: (data: UserPurposeProps) => void;
+  changeAppointmentDate: (data: AppointmentDateProps) => void;
 };
 
 const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement => {
   // desctruc props
-  const { propertyId, negotiatorId, modalStats, events, changeStep, changeUserInfo, userInfo, userPurpose } = props;
+  const {
+    modalStats,
+    propertyData,
+    propertyImageData,
+    negotiatorData,
+    events,
+    userInfo,
+    appointmentDateData,
+    changeStep,
+    changeUserInfo,
+    userPurpose,
+    changeAppointmentDate,
+  } = props;
 
-  // first here to identity the property and negotiator
+  // first step is here, to identity the property and negotiator
   if (modalStats === 'details') {
-    return <ModalDetail negotiatorId={negotiatorId} propertyId={propertyId} changeStep={changeStep} />;
+    return (
+      <ModalDetail
+        propertyData={propertyData}
+        propertyImageData={propertyImageData}
+        negotiatorData={negotiatorData}
+        changeStep={changeStep}
+      />
+    );
   }
 
-  // fill up the form
+  // fill up the form of information user
   if (modalStats === 'identity') {
     return <ModalIdentity changeStep={changeStep} changeUserInfo={changeUserInfo} />;
   }
 
-  console.log(userInfo);
-  // choosing date
+  // choosing reservation of appointment date
   if (modalStats === 'reserving') {
-    return <ModalCalendar events={events} changeStep={changeStep} userInfo={userInfo} userPurpose={userPurpose} />;
-    // set name of applicants
-    // appear the calendar to get appointment
+    return (
+      <ModalCalendar
+        changeAppointmentDate={changeAppointmentDate}
+        events={events}
+        changeStep={changeStep}
+        userInfo={userInfo}
+        userPurpose={userPurpose}
+      />
+    );
   }
 
-  // summary result, if button pressed then will appear new receipt
+  // summary result, if button pressed then will appear new receipt (end here)
   return (
-    <>
-      <p>give the details that already reserving</p>
-      <p>like: meet at...</p>
-      <p>like: when</p>
-      <p>and give details in JSON file</p>
-    </>
+    <ModalSummary
+      propertyData={propertyData}
+      propertyImagesData={propertyImageData}
+      userInfoData={userInfo}
+      changeStep={changeStep}
+      negotiatorData={negotiatorData}
+      appointmentDateData={appointmentDateData}
+    />
   );
-  // get details information, able to confirm it
 };
 
 export default ModalAppointment;

@@ -5,21 +5,30 @@ import { Event, Calendar, Views, momentLocalizer, SlotInfo } from 'react-big-cal
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 
-import { ChangeCurrentStepType, UserInfoTypeProps, UserPurposeProps } from '../SubTableAppointment';
+import {
+  AppointmentDateProps,
+  ChangeCurrentStepType,
+  UserInfoTypeProps,
+  UserPurposeProps,
+} from '../SubTableAppointment';
+import { useSnack } from '@reapit/elements';
 
 type ModalCalendarType = {
   changeStep: (status: ChangeCurrentStepType) => void;
   events: AppointmentModelPagedResult['_embedded'] | undefined;
   userInfo: UserInfoTypeProps;
   userPurpose: (data: UserPurposeProps) => void;
+  changeAppointmentDate: (data: AppointmentDateProps) => void;
 };
 
 const ModalCalendar: FC<ModalCalendarType> = (props): ReactElement => {
-  const { changeStep, events, userInfo } = props;
+  const { changeStep, changeAppointmentDate, events, userInfo } = props;
 
   const [appointmentAvailableDate, setAppointmentAvailableDate] = useState<Event[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  const { custom } = useSnack();
+
+  // return the appointment data
   useEffect(() => {
     if (events) {
       const newData = events.map((event) => {
@@ -36,7 +45,6 @@ const ModalCalendar: FC<ModalCalendarType> = (props): ReactElement => {
         };
       });
       setAppointmentAvailableDate(newData);
-      setIsLoading(false);
     }
   }, [events]);
 
@@ -50,29 +58,38 @@ const ModalCalendar: FC<ModalCalendarType> = (props): ReactElement => {
 
     if (duration < -24) {
       // if after 24 hours
-      console.log('ok, lets make an appointment');
+      const data = {
+        id: '12312',
+        title: `${userInfo?.name} - ${userInfo?.purpose}`,
+        start: event.start,
+        end: event.end,
+        resource: {
+          type: 'new',
+        },
+      };
+
+      // set data
+      changeAppointmentDate(data);
+      changeStep('forward');
     } else if (duration > 0) {
-      // if the days already over
-      console.log('the days already over');
+      custom(
+        {
+          text: 'You cant make appointment when the day already over',
+          icon: 'warningSolidSystem',
+          intent: 'danger',
+        },
+        2500
+      );
     } else {
-      //
-      console.log('you cant make appointment in 6 hours ahead');
+      custom(
+        {
+          text: 'You must make appointment after 24 hours ahead',
+          icon: 'warningSolidSystem',
+          intent: 'critical',
+        },
+        2500
+      );
     }
-
-    const data = {
-      id: '12312',
-      title: `${userInfo?.name} - Looking around`,
-      start: new Date(event.start),
-      end: new Date(event.end),
-      resource: {
-        type: 'new',
-      },
-    };
-
-    console.log(data);
-    // go here
-    // if data duration is valid, then go to next page
-    // while not valid, appear the snack video
   };
 
   return (
@@ -88,12 +105,12 @@ const ModalCalendar: FC<ModalCalendarType> = (props): ReactElement => {
         style={{ height: 450 }}
         views={['month', 'week', 'day']}
         step={30}
-        timeslots={12}
+        timeslots={6}
         dayLayoutAlgorithm='no-overlap'
         onSelectSlot={reservingNewAppointment}
         onSelectEvent={(event) => console.log(event)}
       />
-      <p>Tips: Drag start date and end date in calendar</p>
+      <p className='el-mt3'>Tips: Drag start date and end date in calendar</p>
     </div>
   );
 };

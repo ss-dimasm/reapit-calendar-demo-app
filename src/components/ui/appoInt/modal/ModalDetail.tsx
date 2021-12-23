@@ -1,11 +1,4 @@
-import React, { ReactElement, useEffect, useState, FC } from 'react';
-
-import { useReapitConnect } from '@reapit/connect-session';
-import { NegotiatorModel, PropertyImageModelPagedResult, PropertyModel } from '@reapit/foundations-ts-definitions';
-
-import { reapitConnectBrowserSession } from '../../../../core/connect-session';
-import { getNegotiatorDataByNegotiatorId } from '../../../../platform-api/negotiatorResource';
-import { getPropertyDataByPropertyId, getPropertyImagesByPropertyId } from '../../../../platform-api/propertyResource';
+import React, { ReactElement, useState, FC } from 'react';
 import {
   Button,
   CardListIcon,
@@ -19,67 +12,23 @@ import {
   Loader,
   Subtitle,
 } from '@reapit/elements';
-import { ChangeCurrentStepType } from '../SubTableAppointment';
+import {
+  ChangeCurrentStepType,
+  NegotiatorDataType,
+  PropertyDataType,
+  PropertyImageDataType,
+} from '../SubTableAppointment';
 
 type ModalDetailType = {
-  propertyId: PropertyModel['id'];
-  negotiatorId: PropertyModel['negotiatorId'];
+  propertyData: PropertyDataType;
+  propertyImageData: PropertyImageDataType;
+  negotiatorData: NegotiatorDataType | undefined;
   changeStep: (status: ChangeCurrentStepType) => void;
 };
 
-type PropertyDataType = PropertyModel | undefined;
-type PropertyImageDataType = PropertyImageModelPagedResult | undefined;
-type NegotiatorDataType = NegotiatorModel | undefined;
-
 const ModalDetail: FC<ModalDetailType> = (props): ReactElement => {
-  const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
-
-  const { changeStep, propertyId, negotiatorId } = props;
-
-  const [propertyData, setPropertyData] = useState<PropertyDataType>(undefined);
-  const [propertyImageData, setPropertyImageData] = useState<PropertyImageDataType>(undefined);
-  const [negotiatorData, setNegotiatorData] = useState<NegotiatorDataType>(undefined);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  useEffect(() => {
-    if (!propertyId || !negotiatorId) return;
-
-    const fetchNegotiatorDataByNegotiatorId = async (): Promise<NegotiatorDataType> => {
-      if (!connectSession) return;
-
-      const serviceResponse = await getNegotiatorDataByNegotiatorId(connectSession, negotiatorId);
-
-      if (serviceResponse) setNegotiatorData(serviceResponse);
-    };
-
-    // get property data by id
-    const fetchPropertyDataByPropertyId = async (): Promise<PropertyDataType> => {
-      if (!connectSession) return;
-
-      const serviceResponse = await getPropertyDataByPropertyId(connectSession, propertyId);
-
-      if (serviceResponse) setPropertyData(serviceResponse);
-    };
-
-    //   get property data image
-    const fetchPropertyDataImagesByPropertyId = async (): Promise<PropertyImageDataType> => {
-      if (!connectSession) return;
-
-      const serviceResponse = await getPropertyImagesByPropertyId(connectSession, propertyId);
-
-      if (serviceResponse) {
-        setPropertyImageData(serviceResponse);
-        setIsLoading(false);
-      }
-    };
-
-    if (connectSession) {
-      fetchNegotiatorDataByNegotiatorId();
-      fetchPropertyDataByPropertyId();
-      fetchPropertyDataImagesByPropertyId();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connectSession]);
+  const { changeStep, propertyData, propertyImageData, negotiatorData } = props;
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   if (isLoading)
     return (
