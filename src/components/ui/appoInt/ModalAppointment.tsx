@@ -67,10 +67,10 @@ const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement =>
   if (modalStats === 'reserving') {
     return (
       <ModalCalendar
-        changeAppointmentDate={changeAppointmentDate}
         events={events}
-        changeStep={changeStep}
+        changeAppointmentDate={changeAppointmentDate}
         userInfo={userInfo}
+        changeStep={changeStep}
         userPurpose={userPurpose}
       />
     );
@@ -82,9 +82,9 @@ const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement =>
       propertyData={propertyData}
       propertyImagesData={propertyImageData}
       userInfoData={userInfo}
-      changeStep={changeStep}
       negotiatorData={negotiatorData}
       appointmentDateData={appointmentDateData}
+      changeStep={changeStep}
     />
   );
 };

@@ -19,6 +19,7 @@ export type PropertyModelPagedResultVamp = PropertyModelPagedResult | undefined;
 const Calendar: FC<CalendarProps> = (): ReactElement => {
   const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
 
+  const [isPageLoading, setIsPageLoading] = useState<boolean>(true);
   const [searchParams, setSearchParams] = useState<SearchParamsType>('');
   const [currentPageNumber, setCurrentPageNumber] = useState<PageNumberProps>(1);
   const [propertiesData, setPropertiesData] = useState<PropertyModelPagedResultVamp>(undefined);
@@ -35,6 +36,10 @@ const Calendar: FC<CalendarProps> = (): ReactElement => {
 
       if (serviceResponse) {
         setPropertiesData(serviceResponse);
+        setCurrentPageNumber((number) => number++);
+        if (isPageLoading) {
+          setIsPageLoading(false);
+        }
       }
     };
 
@@ -46,32 +51,51 @@ const Calendar: FC<CalendarProps> = (): ReactElement => {
 
   // Search Property Button
   const searchNewList = (params): void => {
+    setCurrentPageNumber(1);
     setSearchParams(params);
   };
 
+  const resetPropertiesData = (): void => {
+    setPropertiesData(undefined);
+  };
+
+  if (isPageLoading) return <Loader label='Page wait...' fullPage />;
   // while properties data is still load / unavailable
   if (propertiesData === undefined) {
-    return <Loader label='Wait' fullPage />;
+    return (
+      <>
+        <SearchBar searchNewParams={searchNewList} resetPropertiesData={resetPropertiesData} />
+        <Loader label='Getting data...' fullPage />;
+      </>
+    );
   }
 
   // while properties data is not available
   if (propertiesData?.totalCount === 0) {
     return (
       <>
-        <SearchBar searchNewParams={searchNewList} />
+        <SearchBar searchNewParams={searchNewList} resetPropertiesData={resetPropertiesData} />
         <NotFound />
       </>
     );
   }
 
+  const changePageNumber = (e): void => {
+    if (propertiesData?.totalPageCount) {
+      if (e <= propertiesData.totalPageCount) {
+        setCurrentPageNumber(e);
+      }
+    }
+  };
   // while properties data is ready
   return (
     <>
-      <SearchBar searchNewParams={searchNewList} />
+      <SearchBar searchNewParams={searchNewList} resetPropertiesData={resetPropertiesData} />
       <TableAppointment propertyData={propertiesData} searchParams={searchParams} />
       <Pagination
         className='el-mt6 el-pt6'
-        callback={setCurrentPageNumber}
+        onClick={() => setPropertiesData(undefined)}
+        callback={(e) => changePageNumber(e)}
         currentPage={currentPageNumber}
         numberPages={propertiesData?.totalPageCount || 1}
       />

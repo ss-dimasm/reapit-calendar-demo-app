@@ -6,7 +6,6 @@ import {
   CardHeadingWrap,
   CardWrap,
   FlexContainer,
-  Loader,
   SnackProvider,
   Steps,
   useModal,
@@ -19,8 +18,6 @@ import {
 } from '@reapit/foundations-ts-definitions';
 import { useReapitConnect } from '@reapit/connect-session';
 
-import { stringOrDate } from 'react-big-calendar';
-
 import { reapitConnectBrowserSession } from '../../../core/connect-session';
 import {
   getAppointmentDateByNegotiatorId,
@@ -29,20 +26,21 @@ import {
 import ModalAppointment from './ModalAppointment';
 import Spacer from '../Spacer';
 import { getPropertyDataByPropertyId, getPropertyImagesByPropertyId } from '../../../platform-api/propertyResource';
+import Loading from '../utils/Loading';
 
-type SubTableAppointmentProps = {
+interface SubTableAppointmentProps {
   propertyId: PropertyModel['id'];
   negoId: PropertyModel['negotiatorId'];
   description: PropertyModel['description'];
-};
+}
+
 type NegotiatorType = NegotiatorModel['id'] | undefined;
 type AppointmentModelPagedResultVamp = AppointmentModelPagedResult | undefined;
-type CurrentStepType = string;
 type AppointmentDateType = {
   id: string | number | undefined;
   title: string | undefined;
-  start: stringOrDate | any;
-  end: stringOrDate | any;
+  start: any;
+  end: any;
   resource: {
     type: string;
   };
@@ -59,7 +57,7 @@ export type PropertyImageDataType = PropertyImageModelPagedResult | undefined;
 export type UserInfoType = {
   name: string | undefined;
   email: string | undefined;
-  phone: string | number | undefined;
+  phone: string | undefined;
   purpose: string | undefined;
 };
 
@@ -71,15 +69,15 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
   const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
   const { propertyId, negoId, description } = props;
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // user must wait after modal appear
   const [modalStats, setModalStats] = useState<ModalStatsType>('details');
   const [modalTitle, setModalTitle] = useState<string>('Property Details');
   const [negotiatorId, setNegotiatorId] = useState<NegotiatorType>(undefined);
   const [negotiatorData, setNegotiatorData] = useState<NegotiatorDataType>(undefined);
   const [propertyData, setPropertyData] = useState<PropertyDataType>(undefined);
   const [propertyImageData, setPropertyImageData] = useState<PropertyImageDataType>(undefined);
-  const [appointmentProperty, setAppointmentProperty] = useState<AppointmentModelPagedResultVamp>();
-  const [currentStep, setCurrentStep] = useState<CurrentStepType>('1');
+  const [appointmentProperty, setAppointmentProperty] = useState<AppointmentModelPagedResultVamp>(undefined);
+  const [currentStep, setCurrentStep] = useState<string>('1');
   const [userInfo, setUserInfo] = useState<UserInfoTypeProps>(undefined);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [userPurpose, setUserPurpose] = useState<UserPurposeProps>(undefined);
@@ -90,21 +88,28 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 
   // fetch appointment by property id
   useEffect(() => {
-    if (!negotiatorId) return; //prevent consume endpoint, if the negotiatorId and propertyId is undefined
+    if (!negotiatorId) return; //prevent consume endpoint, if the negotiatorId is undefined
 
-    const fetchAppointmentProperty = async (): Promise<AppointmentModelPagedResultVamp> => {
+    // get appointment data list from property's negotiator id
+    const fetchAppointmentDataByNegotiator = async (): Promise<AppointmentModelPagedResultVamp> => {
       if (!connectSession) return;
       const serviceResponse = await getAppointmentDateByNegotiatorId(connectSession, negotiatorId);
 
-      if (serviceResponse) setAppointmentProperty(serviceResponse);
+      if (serviceResponse) {
+        setAppointmentProperty(serviceResponse);
+      }
     };
 
+    // get negotiator data from negotiator id
     const fetchNegotiatorDataByNegotiatorId = async (): Promise<NegotiatorDataType> => {
       if (!connectSession) return;
 
       const serviceResponse = await getNegotiatorDataByNegotiatorId(connectSession, negotiatorId);
 
-      if (serviceResponse) setNegotiatorData(serviceResponse);
+      if (serviceResponse) {
+        setIsLoading(false);
+        setNegotiatorData(serviceResponse);
+      }
     };
 
     // get property data by id
@@ -121,14 +126,11 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 
       const serviceResponse = await getPropertyImagesByPropertyId(connectSession, propertyId);
 
-      if (serviceResponse) {
-        setPropertyImageData(serviceResponse);
-        setIsLoading(false);
-      }
+      if (serviceResponse) setPropertyImageData(serviceResponse);
     };
 
     if (connectSession) {
-      fetchAppointmentProperty();
+      fetchAppointmentDataByNegotiator();
       fetchNegotiatorDataByNegotiatorId();
       fetchPropertyDataByPropertyId();
       fetchPropertyDataImagesByPropertyId();
@@ -145,16 +147,17 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 
   //   toggle close modal (reset every states thing) :)
   const closeModalProperty = (): void => {
-    setNegotiatorId(undefined);
-    setAppointmentProperty(undefined);
     setModalStats('details');
+    setModalTitle('Property Details');
+    setNegotiatorId(undefined);
+    setNegotiatorData(undefined);
+    setPropertyData(undefined);
+    setPropertyImageData(undefined);
+    setAppointmentProperty(undefined);
     setCurrentStep('1');
     setUserInfo(undefined);
     setReservedAppointmentDate(undefined);
-    setModalTitle('Property Details');
     setIsLoading(true);
-    setPropertyData(undefined);
-    setPropertyImageData(undefined);
     closeModalA();
   };
 
@@ -186,19 +189,13 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
   };
 
   // change user info
-  const changeUserInfo = (data: UserInfoType): void => {
-    setUserInfo(data);
-  };
+  const changeUserInfo = (data: UserInfoType): void => setUserInfo(data);
 
   // change user purpose at reserving date
-  const changeUserPurpose = (data: UserPurposeProps): void => {
-    setUserPurpose(data);
-  };
+  const changeUserPurpose = (data: UserPurposeProps): void => setUserPurpose(data);
 
   // set the reserved appointmentDate
-  const changeAppointmentDate = (data: AppointmentDateProps): void => {
-    setReservedAppointmentDate(data);
-  };
+  const changeAppointmentDate = (data: AppointmentDateProps): void => setReservedAppointmentDate(data);
 
   // configure the modal title
   const setUpModalTitle = (modalStats: ModalStatsType): string => {
@@ -232,9 +229,7 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
         <ModalA title={modalTitle} onModalClose={closeModalProperty}>
           {isLoading ? (
             <>
-              <div className='el-flex el-flex-justify-center'>
-                <Loader label='please wait...' />
-              </div>
+              <Loading text='Please wait..' isCenter={true} />
             </>
           ) : (
             <>

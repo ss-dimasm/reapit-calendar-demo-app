@@ -13,10 +13,10 @@ type TableAppointmentProps = {
 const TableAppointment: FC<TableAppointmentProps> = (props): ReactElement => {
   const { propertyData } = props;
 
-  const propertiesDetailDatas = new Array();
+  const propertiesDetailDatas: any[] = [];
 
   if (propertyData?._embedded !== undefined) {
-    propertyData?._embedded.map((property): void => {
+    propertyData._embedded.forEach((property): void => {
       const data = {
         cells: [
           {

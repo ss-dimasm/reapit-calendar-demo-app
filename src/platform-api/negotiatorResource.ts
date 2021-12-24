@@ -11,10 +11,10 @@ import { URLS, BASE_HEADERS } from '../constants/api';
 export const getAppointmentDateByNegotiatorId = async (
   session: ReapitConnectSession,
   negotiatorId
-): Promise<NegotiatorModelPagedResult | any> => {
+): Promise<NegotiatorModelPagedResult | undefined> => {
   try {
     const response = await fetch(
-      `${`${window.reapit.config.platformApiUrl}${URLS.APPOINTMENT.PAGED}?negotiatorId=${negotiatorId}`}`,
+      `${`${window.reapit.config.platformApiUrl}${URLS.APPOINTMENT.PAGED}?sortBy=-start&negotiatorId=${negotiatorId}`}`,
       {
         method: 'GET',
         headers: {

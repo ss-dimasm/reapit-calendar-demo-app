@@ -14,9 +14,9 @@ import {
 import { useSnack } from '@reapit/elements';
 
 type ModalCalendarType = {
-  changeStep: (status: ChangeCurrentStepType) => void;
   events: AppointmentModelPagedResult['_embedded'] | undefined;
   userInfo: UserInfoTypeProps;
+  changeStep: (status: ChangeCurrentStepType) => void;
   userPurpose: (data: UserPurposeProps) => void;
   changeAppointmentDate: (data: AppointmentDateProps) => void;
 };

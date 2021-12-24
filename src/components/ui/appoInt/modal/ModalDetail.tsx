@@ -1,4 +1,5 @@
-import React, { ReactElement, useState, FC } from 'react';
+import React, { ReactElement, FC } from 'react';
+
 import {
   Button,
   CardListIcon,
@@ -9,15 +10,16 @@ import {
   CardWrap,
   FlexContainer,
   Icon,
-  Loader,
   Subtitle,
 } from '@reapit/elements';
+
 import {
   ChangeCurrentStepType,
   NegotiatorDataType,
   PropertyDataType,
   PropertyImageDataType,
 } from '../SubTableAppointment';
+import { RecoverImagePropertyIfEmpty } from '../../../../utils/ModalDetailUtils';
 
 type ModalDetailType = {
   propertyData: PropertyDataType;
@@ -28,14 +30,6 @@ type ModalDetailType = {
 
 const ModalDetail: FC<ModalDetailType> = (props): ReactElement => {
   const { changeStep, propertyData, propertyImageData, negotiatorData } = props;
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  if (isLoading)
-    return (
-      <div className='el-flex el-flex-justify-center'>
-        <Loader label='please wait...' />
-      </div>
-    );
 
   if (!negotiatorData?.id)
     return (
@@ -44,24 +38,16 @@ const ModalDetail: FC<ModalDetailType> = (props): ReactElement => {
       </div>
     );
 
-  let imagesSource;
-  let imageAlt;
-  if (propertyImageData?.totalCount === 0) {
-    imagesSource = 'https://i.stack.imgur.com/6M513.png';
-    imageAlt = 'not-found';
-  } else {
-    imagesSource = propertyImageData?._embedded?.[0]?.url;
-    imageAlt = propertyImageData?._embedded?.[0]?.caption;
-  }
-
+  // return image source and image alt based condition of data property image
+  const photoSource = RecoverImagePropertyIfEmpty(propertyImageData);
   return (
     <>
       <FlexContainer>
         <img
           height={250}
           width={'50%'}
-          src={imagesSource}
-          alt={imageAlt}
+          src={photoSource.imageSource}
+          alt={photoSource.imageAlt}
           style={{ objectFit: 'cover', objectPosition: 'center', marginRight: '10px' }}
         />
         <div style={{ width: '100%', position: 'relative' }}>
@@ -97,7 +83,7 @@ const ModalDetail: FC<ModalDetailType> = (props): ReactElement => {
                 <CardListItemTextSecondary>{negotiatorData.name}</CardListItemTextSecondary>
               </CardListItemTextWrap>
             </CardListItem>
-            <Button intent='critical' className='el-mt4' onClick={() => changeStep('forward')}>
+            <Button intent='critical' className='el-mt4' chevronRight onClick={() => changeStep('forward')}>
               Make an Appointment
             </Button>
           </div>
