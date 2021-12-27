@@ -1,8 +1,8 @@
-import { PropertyImageDataType } from '../components/ui/appoInt/SubTableAppointment';
+import { PropertyImageDataType } from '../interfaces/appointmentInterfaces';
 
 type PhotoType = {
-  imageSource: string | undefined;
-  imageAlt: string | undefined;
+	imageSource: string | undefined;
+	imageAlt: string | undefined;
 };
 
 const altImageSource = 'https://i.stack.imgur.com/6M513.png';
@@ -14,18 +14,18 @@ const altImageSource = 'https://i.stack.imgur.com/6M513.png';
  */
 
 export const RecoverImagePropertyIfEmpty = (propertyImageData: PropertyImageDataType) => {
-  const photoSource: PhotoType = {
-    imageSource: '',
-    imageAlt: '',
-  };
+	const photoSource: PhotoType = {
+		imageSource: '',
+		imageAlt: '',
+	};
 
-  if (propertyImageData?.totalCount === 0) {
-    photoSource.imageSource = altImageSource;
-    photoSource.imageAlt = 'not-found';
-  } else {
-    photoSource.imageSource = propertyImageData?._embedded?.[0]?.url;
-    photoSource.imageAlt = propertyImageData?._embedded?.[0]?.caption;
-  }
+	if (propertyImageData?.totalCount === 0) {
+		photoSource.imageSource = altImageSource;
+		photoSource.imageAlt = 'not-found';
+	} else {
+		photoSource.imageSource = propertyImageData?._embedded?.[0]?.url;
+		photoSource.imageAlt = propertyImageData?._embedded?.[0]?.caption;
+	}
 
-  return photoSource;
+	return photoSource;
 };
