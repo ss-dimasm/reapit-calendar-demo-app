@@ -7,6 +7,15 @@ import {
 	CreateAppointmentModel,
 } from '@reapit/foundations-ts-definitions';
 
+// Calendar Page
+export type PropertyModelPagedResultVamp = PropertyModelPagedResult | undefined;
+
+// SearchBar Component
+export type SearchBarProps = {
+	searchNewParams: (params) => void;
+	resetPropertiesData: () => void;
+};
+
 // Table Appointment Component
 export interface TableAppointmentProps {
 	propertyData: PropertyModelPagedResult | undefined;

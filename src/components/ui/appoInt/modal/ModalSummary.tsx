@@ -74,7 +74,6 @@ const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 	const consoleDotLog = (): void => consoleDotLogThenPostToBackend(appointmentDateData, propertyData, negotiatorData);
 	const openGoogleMap = (coordinate: string): Window | null => window.open(coordinate);
 	const sendDataToServer = (): void => {
-		console.log('clicked');
 		setIsFetching(true);
 		const data = retrieveAppointmentDataPostModel(appointmentDateData, propertyData, negotiatorData);
 		setFinalReservedAppointment(data);
