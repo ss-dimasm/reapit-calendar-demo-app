@@ -57,6 +57,7 @@ export type ModalAppointmentDataProps = {
 	userPurpose: (data: string | undefined) => void;
 	changeAppointmentDate: (data: AppointmentDateProps) => void;
 	setFinalReservedAppointment: (data: CreateAppointmentModelType) => void;
+	closeModalProperty: () => void;
 };
 
 // Modal Items: Calendar Component
@@ -106,4 +107,5 @@ export type ModalReceiptType = {
 	negotiatorData: NegotiatorDataType;
 	finalReservedAppointment: CreateAppointmentModelType | undefined;
 	changeStep: (status: ChangeCurrentStepType) => void;
+	closeModalProperty: () => void;
 };

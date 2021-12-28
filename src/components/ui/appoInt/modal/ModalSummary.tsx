@@ -35,8 +35,14 @@ import ModalFetch from './ModalFetch';
 const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 	const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
 
-	const { appointmentDateData, negotiatorData, propertyData, finalReservedAppointment, setFinalReservedAppointment } =
-		props;
+	const {
+		appointmentDateData,
+		negotiatorData,
+		propertyData,
+		finalReservedAppointment,
+		setFinalReservedAppointment,
+		changeStep,
+	} = props;
 
 	const [isFetching, setIsFetching] = useState<boolean>(false);
 
@@ -49,6 +55,7 @@ const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 
 			if (serviceResponse) {
 				setIsFetching(false);
+				changeStep('forward');
 			}
 		};
 		if (connectSession) {
@@ -67,12 +74,12 @@ const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 	const consoleDotLog = (): void => consoleDotLogThenPostToBackend(appointmentDateData, propertyData, negotiatorData);
 	const openGoogleMap = (coordinate: string): Window | null => window.open(coordinate);
 	const sendDataToServer = (): void => {
+		console.log('clicked');
 		setIsFetching(true);
 		const data = retrieveAppointmentDataPostModel(appointmentDateData, propertyData, negotiatorData);
 		setFinalReservedAppointment(data);
 	};
 
-	console.log(isFetching);
 	if (isFetching) return <ModalFetch />;
 	// will split the component later
 	return (

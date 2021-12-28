@@ -24,6 +24,7 @@ const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement =>
 		userPurpose,
 		changeAppointmentDate,
 		setFinalReservedAppointment,
+		closeModalProperty,
 	} = props;
 
 	// first step is here, to identity the property and negotiator
@@ -78,6 +79,7 @@ const ModalAppointment: FC<ModalAppointmentDataProps> = (props): ReactElement =>
 				negotiatorData={negotiatorData}
 				finalReservedAppointment={finalReservedAppointment}
 				changeStep={changeStep}
+				closeModalProperty={closeModalProperty}
 			/>
 		</>
 	);

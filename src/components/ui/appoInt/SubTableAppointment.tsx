@@ -136,6 +136,7 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 		setCurrentStep('1');
 		setUserInfo(undefined);
 		setReservedAppointmentDate(undefined);
+		setFinalReservedAppointment(undefined);
 		setIsLoading(true);
 		closeModalA();
 	};
@@ -187,7 +188,9 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 		}
 	};
 
+	// update reserved appointment date that already selected by user
 	const updateReservedAppointmentDate = (data: CreateAppointmentModelType): void => setFinalReservedAppointment(data);
+
 	return (
 		<>
 			<SnackProvider>
@@ -231,6 +234,7 @@ const SubTableAppointment: FC<SubTableAppointmentProps> = (props): ReactElement 
 									userPurpose={changeUserPurpose}
 									changeStep={toggleChangeStep}
 									setFinalReservedAppointment={updateReservedAppointmentDate}
+									closeModalProperty={closeModalProperty}
 								/>
 							</div>
 						</>
