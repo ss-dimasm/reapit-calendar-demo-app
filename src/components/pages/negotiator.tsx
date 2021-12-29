@@ -19,10 +19,7 @@ export type PageLocationType = 'search' | 'result' | 'details';
 const Negotiator: FC<NegotiatorProps> = (): ReactElement => {
 	const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [pageLocation, setPageLocation] = useState<PageLocationType>('search');
-
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined);
 	const [isPageLoading, setIsPageLoading] = useState<boolean>(false);
 	const [negotiatorsListdata, setNegotiatorsListData] = useState<NegotiatorModelPagedResult | undefined>(undefined);
@@ -49,7 +46,6 @@ const Negotiator: FC<NegotiatorProps> = (): ReactElement => {
 
 		const getNegotiatorById = async (): Promise<NegotiatorModel | undefined> => {
 			if (!selectedNegotiatorId || !connectSession) return;
-			console.log('negotiator id called');
 			const serviceResponse = await getNegotiatorDataByNegotiatorId(connectSession, selectedNegotiatorId);
 			if (serviceResponse) {
 				setSingleNegotiatorData(serviceResponse);
@@ -65,7 +61,7 @@ const Negotiator: FC<NegotiatorProps> = (): ReactElement => {
 
 	const { custom } = useSnack();
 
-	// function logic
+	// Change Search Params
 	const changeSearchParams = (data: string | undefined): void => {
 		setSearchQuery(data);
 		setIsPageLoading(true);
@@ -84,16 +80,22 @@ const Negotiator: FC<NegotiatorProps> = (): ReactElement => {
 	const resetStateData = (): void => {
 		setNegotiatorsListData(undefined);
 		setSelectedNegotiatorId(undefined);
+		setSearchQuery(undefined);
 	};
 
+	// change page location between 'search' | 'result' | 'summary'
 	const changePageLocation = (location: PageLocationType): void => {
-		console.log(location);
-		if (location === 'search') {
-			resetStateData();
-		}
-		if (location === 'details') {
-			setSingleNegotiatorData(undefined);
-			setSelectedNegotiatorId(undefined);
+		switch (location) {
+			case 'search':
+				resetStateData();
+				break;
+			case 'details':
+				setSingleNegotiatorData(undefined);
+				setSelectedNegotiatorId(undefined);
+				break;
+			case 'result':
+				setSingleNegotiatorData(undefined);
+				setSelectedNegotiatorId(undefined);
 		}
 		setPageLocation(location);
 	};
@@ -102,13 +104,13 @@ const Negotiator: FC<NegotiatorProps> = (): ReactElement => {
 		setSelectedNegotiatorId(negotiatorId);
 		setIsPageLoading(true);
 	};
+
 	// todo today
-	// get paged negotiator data
-	// implement infinite scroll, goes to bottom
-	// can select one of paged negotiator data
-	// move to single negotiator data
-	// eslint-disable-next-line max-len
-	// in the single negotiator data, user can check appointment date details (can delete and see the appointment), can see the office, can see the properties that he handles, and can see the data information
+	// in the single negotiator data
+	// user can check appointment date details (can delete and see the appointment)
+	// can see the office, can see the properties that he handles
+	// can see the data information
+
 	if (isPageLoading) return <Loading text='Please wait...' isCenter isFullScreen />;
 
 	if (pageLocation === 'search') {

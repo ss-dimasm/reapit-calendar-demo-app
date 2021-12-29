@@ -1,5 +1,10 @@
 import moment from 'moment';
-import { NegotiatorDataType, PropertyDataType, CreateAppointmentModelType } from '../interfaces/appointmentInterfaces';
+import {
+	NegotiatorDataType,
+	PropertyDataType,
+	CreateAppointmentModelType,
+	UserInfoType,
+} from '../interfaces/appointmentInterfaces';
 
 /**
  * Get new time format from DDMMYYTHHMMSS to DDMMYYYY HMM
@@ -61,8 +66,13 @@ export const identityTheAddress = (propertyData: PropertyDataType): string => {
  * @param propertyData
  * @param negotiatorData
  */
-const generateAppointmentPostData = (appointmentDateData, propertyData, negotiatorData): CreateAppointmentModelType => {
-	const data: CreateAppointmentModelType = {
+const generateAppointmentPostData = (
+	appointmentDateData,
+	propertyData,
+	negotiatorData,
+	userInfoData: UserInfoType
+): CreateAppointmentModelType => {
+	const data: any = {
 		start: appointmentDateData?.start.toISOString(),
 		end: appointmentDateData?.end.toISOString(),
 		followUpOn: moment(new Date(appointmentDateData?.end)).add(1, 'd').toISOString().substring(0, 10),
@@ -72,6 +82,13 @@ const generateAppointmentPostData = (appointmentDateData, propertyData, negotiat
 		negotiatorIds: [propertyData?.negotiatorId],
 		officeIds: propertyData?.officeIds,
 		attendee: {
+			contact: [
+				{
+					name: userInfoData?.name,
+					phone: userInfoData?.phone,
+					mail: userInfoData?.email,
+				},
+			],
 			id: 'MKT210196',
 			type: 'applicant',
 		},
@@ -93,8 +110,13 @@ const generateAppointmentPostData = (appointmentDateData, propertyData, negotiat
  * @param propertyData
  * @param negotiatorData
  */
-export const consoleDotLogThenPostToBackend = (appointmentDateData, propertyData, negotiatorData): void => {
-	const data = generateAppointmentPostData(appointmentDateData, propertyData, negotiatorData);
+export const consoleDotLogThenPostToBackend = (
+	appointmentDateData,
+	propertyData,
+	negotiatorData,
+	userInfoData
+): void => {
+	const data = generateAppointmentPostData(appointmentDateData, propertyData, negotiatorData, userInfoData);
 	console.log(data);
 };
 
@@ -107,8 +129,9 @@ export const consoleDotLogThenPostToBackend = (appointmentDateData, propertyData
 export const retrieveAppointmentDataPostModel = (
 	appointmentDateData,
 	propertyData,
-	negotiatorData
+	negotiatorData,
+	userInfoData
 ): CreateAppointmentModelType => {
-	const data = generateAppointmentPostData(appointmentDateData, propertyData, negotiatorData);
+	const data = generateAppointmentPostData(appointmentDateData, propertyData, negotiatorData, userInfoData);
 	return data;
 };

@@ -3,10 +3,11 @@ import { useReapitConnect } from '@reapit/connect-session';
 import { reapitConnectBrowserSession } from '../../core/connect-session';
 
 import { NavResponsive } from '@reapit/elements';
-
+import { useHistory } from 'react-router-dom';
 export const Nav: FC = () => {
 	const { connectLogoutRedirect } = useReapitConnect(reapitConnectBrowserSession);
 
+	const history = useHistory();
 	return (
 		<NavResponsive
 			options={[
@@ -22,11 +23,13 @@ export const Nav: FC = () => {
 				{
 					itemIndex: 2,
 					href: '/company',
+					callback: () => history.push('/company'),
 					iconId: 'dataMenu',
 					text: 'Company',
 				},
 				{
 					itemIndex: 4,
+					callback: () => history.push('/calendar'),
 					href: '/calendar',
 					iconId: 'mapMenu',
 					text: 'AppointIn',
@@ -34,6 +37,7 @@ export const Nav: FC = () => {
 				{
 					itemIndex: 5,
 					href: '/negotiator',
+					callback: () => history.push('/negotiator'),
 					iconId: 'usersMenu',
 					text: 'Negotiator',
 				},

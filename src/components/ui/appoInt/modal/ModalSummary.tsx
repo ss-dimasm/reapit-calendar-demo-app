@@ -36,6 +36,7 @@ const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 	const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
 
 	const {
+		userInfoData,
 		appointmentDateData,
 		negotiatorData,
 		propertyData,
@@ -71,11 +72,12 @@ const ModalSummary: FC<ModalSummaryType> = (props): ReactElement => {
 	const appointmentDateEnd = convertTimeToAssignedInput(appointmentDateData?.end);
 
 	// function component zone start below
-	const consoleDotLog = (): void => consoleDotLogThenPostToBackend(appointmentDateData, propertyData, negotiatorData);
+	const consoleDotLog = (): void =>
+		consoleDotLogThenPostToBackend(appointmentDateData, propertyData, negotiatorData, userInfoData);
 	const openGoogleMap = (coordinate: string): Window | null => window.open(coordinate);
 	const sendDataToServer = (): void => {
 		setIsFetching(true);
-		const data = retrieveAppointmentDataPostModel(appointmentDateData, propertyData, negotiatorData);
+		const data = retrieveAppointmentDataPostModel(appointmentDateData, propertyData, negotiatorData, userInfoData);
 		setFinalReservedAppointment(data);
 	};
 

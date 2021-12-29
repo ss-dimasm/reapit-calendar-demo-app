@@ -5,7 +5,7 @@ type PhotoType = {
 	imageAlt: string | undefined;
 };
 
-const altImageSource = 'https://i.stack.imgur.com/6M513.png';
+const ALT_IMAGE_SOURCE = 'https://i.stack.imgur.com/6M513.png';
 
 /**
  * Recovery Image Source and Image Alt when Property Images Data is Empty
@@ -20,7 +20,7 @@ export const RecoverImagePropertyIfEmpty = (propertyImageData: PropertyImageData
 	};
 
 	if (propertyImageData?.totalCount === 0) {
-		photoSource.imageSource = altImageSource;
+		photoSource.imageSource = ALT_IMAGE_SOURCE;
 		photoSource.imageAlt = 'not-found';
 	} else {
 		photoSource.imageSource = propertyImageData?._embedded?.[0]?.url;
