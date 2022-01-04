@@ -1,37 +1,37 @@
-import React, { useEffect, FC, useState } from 'react';
+import React, { useEffect, FC, useState } from 'react'
 
-import { Title, Subtitle, BodyText } from '@reapit/elements';
+import { Title, Subtitle, BodyText } from '@reapit/elements'
 
-import { useReapitConnect } from '@reapit/connect-session';
-import { reapitConnectBrowserSession } from '../../core/connect-session';
-import { configurationAppointmentsApiService } from '../../platform-api/configuration-api';
+import { useReapitConnect } from '@reapit/connect-session'
+import { reapitConnectBrowserSession } from '../../core/connect-session'
+import { configurationAppointmentsApiService } from '../../platform-api/configuration-api'
 
-import { ListItemModel } from '@reapit/foundations-ts-definitions';
+import { ListItemModel } from '@reapit/foundations-ts-definitions'
 
-export type AuthenticatedProps = {};
+export type AuthenticatedProps = {}
 
 export const Authenticated: FC<AuthenticatedProps> = () => {
-  const { connectSession } = useReapitConnect(reapitConnectBrowserSession);
+  const { connectSession } = useReapitConnect(reapitConnectBrowserSession)
   const [appointmentConfigTypes, setAppointmentConfigTypes] = useState<
     Array<ListItemModel>
-  >([]);
+  >([])
 
   useEffect(() => {
     const fetchAppoinmentConfigs = async () => {
-      if (!connectSession) return;
+      if (!connectSession) return
       const serviceResponse = await configurationAppointmentsApiService(
         connectSession
-      );
+      )
       if (serviceResponse) {
-        setAppointmentConfigTypes(serviceResponse);
+        setAppointmentConfigTypes(serviceResponse)
       }
-    };
-    if (connectSession) {
-      fetchAppoinmentConfigs();
     }
-  }, [connectSession]);
+    if (connectSession) {
+      fetchAppoinmentConfigs()
+    }
+  }, [connectSession])
 
-  console.log('Appointment Config Types are: ', appointmentConfigTypes);
+  console.log('Appointment Config Types are: ', appointmentConfigTypes)
   return (
     <>
       <Title>Welcome To Reapit Foundations</Title>
@@ -43,9 +43,10 @@ export const Authenticated: FC<AuthenticatedProps> = () => {
         provide you with an accessToken and login identity information to
         authenticate against our plaform APIs. For more on this{' '}
         <a
-          href='https://developers.reapit.cloud/api-docs//api/web#connect-session'
-          target='_blank'
-          rel='noreferrer noopener'>
+          href="https://developers.reapit.cloud/api-docs//api/web#connect-session"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           visit here.
         </a>
       </BodyText>
@@ -56,9 +57,10 @@ export const Authenticated: FC<AuthenticatedProps> = () => {
         endpoint in the platform-api file with an API of your choosing from the
         API explorer in the developer portal. For our API explorer{' '}
         <a
-          href='https://developers.reapit.cloud/swagger'
-          target='_blank'
-          rel='noreferrer noopener'>
+          href="https://developers.reapit.cloud/swagger"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           visit here.
         </a>
       </BodyText>
@@ -67,14 +69,15 @@ export const Authenticated: FC<AuthenticatedProps> = () => {
         library. This is the simplest way for you to adhere to the basic style
         guidelines for Marketplace applications. For more on this{' '}
         <a
-          href='https://developers.reapit.cloud/api-docs/elements'
-          target='_blank'
-          rel='noreferrer noopener'>
+          href="https://developers.reapit.cloud/api-docs/elements"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
           visit here.
         </a>
       </BodyText>
     </>
-  );
-};
+  )
+}
 
-export default Authenticated;
+export default Authenticated

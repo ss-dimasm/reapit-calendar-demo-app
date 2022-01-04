@@ -1,11 +1,11 @@
-import React from 'react';
+import React from 'react'
 
 type SpacerType = {
-  number: number;
-};
+  number: number
+}
 
 const Spacer = ({ number }: SpacerType) => {
-  return <div style={{ height: number }}></div>;
-};
+  return <div style={{ height: number }}></div>
+}
 
-export default Spacer;
+export default Spacer

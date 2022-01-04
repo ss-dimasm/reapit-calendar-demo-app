@@ -33,14 +33,24 @@ const patchForkTsCheckerWebpackPlugin = (config, env) => {
       async: isEnvDevelopment,
       useTypescriptIncrementalApi: false,
       checkSyntacticErrors: true,
-      resolveModuleNameModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
-      resolveTypeReferenceDirectiveModule: process.versions.pnp ? `${__dirname}/pnpTs.js` : undefined,
+      resolveModuleNameModule: process.versions.pnp
+        ? `${__dirname}/pnpTs.js`
+        : undefined,
+      resolveTypeReferenceDirectiveModule: process.versions.pnp
+        ? `${__dirname}/pnpTs.js`
+        : undefined,
       tsconfig: paths.appTsConfig,
-      reportFiles: ['**', '!**/__tests__/**', '!**/?(*.)(spec|test).*', '!**/src/setupProxy.*', '!**/src/setupTests.*'],
+      reportFiles: [
+        '**',
+        '!**/__tests__/**',
+        '!**/?(*.)(spec|test).*',
+        '!**/src/setupProxy.*',
+        '!**/src/setupTests.*',
+      ],
       silent: true,
       // The formatter is invoked directly in WebpackDevServerUtils during development
       formatter: isEnvProduction ? typescriptFormatter : undefined,
-    }),
+    })
   )
 
   return config
@@ -92,11 +102,15 @@ const addLinariaLoader = (config) => {
     throw Error('Cant find webpack rule with oneOf')
   }
 
-  let subRuleWithTsxIndex = ruleWithOneOf.oneOf.findIndex((rule) => rule.test.toString().includes('tsx'))
+  let subRuleWithTsxIndex = ruleWithOneOf.oneOf.findIndex((rule) =>
+    rule.test.toString().includes('tsx')
+  )
   if (subRuleWithTsxIndex === -1) {
     throw Error('Cant find rule match ts/tsx')
   }
-  const subRuleWithTsx = transformLoader(ruleWithOneOf.oneOf[subRuleWithTsxIndex])
+  const subRuleWithTsx = transformLoader(
+    ruleWithOneOf.oneOf[subRuleWithTsxIndex]
+  )
   ruleWithOneOf.oneOf[1] = subRuleWithTsx
 
   return config
@@ -107,7 +121,10 @@ module.exports = {
   // The Webpack config to use when compiling your react app for development or production.
   webpack: function (config, env) {
     return {
-      ...override(addLinariaLoader, removeOriginalForkTsCheckerWebpackPlugin)(config),
+      ...override(
+        addLinariaLoader,
+        removeOriginalForkTsCheckerWebpackPlugin
+      )(config),
       ...patchForkTsCheckerWebpackPlugin(config, env),
     }
   },

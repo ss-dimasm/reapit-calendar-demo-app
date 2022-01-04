@@ -1,58 +1,75 @@
-import * as React from 'react';
-import { Route, Router as BrowserRouter, Switch, Redirect } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
-import Routes from '../constants/routes';
-import PrivateRouteWrapper from './private-route-wrapper';
+import * as React from 'react'
+import {
+  Route,
+  Router as BrowserRouter,
+  Switch,
+  Redirect,
+} from 'react-router-dom'
+import { createBrowserHistory } from 'history'
+import Routes from '../constants/routes'
+import PrivateRouteWrapper from './private-route-wrapper'
 
-export const history = createBrowserHistory();
+export const history = createBrowserHistory()
 
 export const catchChunkError = (
-	fn: Function,
-	retriesLeft = 3,
-	interval = 500
+  fn: Function,
+  retriesLeft = 3,
+  interval = 500
 ): Promise<{ default: React.ComponentType<any> }> => {
-	return new Promise((resolve, reject) => {
-		fn()
-			.then(resolve)
-			.catch((error: Error) => {
-				// Ignore chunk cache error and retry to fetch, if cannot reload browser
-				console.info(error);
-				setTimeout(() => {
-					if (retriesLeft === 1) {
-						window.location.reload();
-						return;
-					}
-					catchChunkError(fn, retriesLeft - 1, interval).then(resolve, reject);
-				}, interval);
-			});
-	});
-};
+  return new Promise((resolve, reject) => {
+    fn()
+      .then(resolve)
+      .catch((error: Error) => {
+        // Ignore chunk cache error and retry to fetch, if cannot reload browser
+        console.info(error)
+        setTimeout(() => {
+          if (retriesLeft === 1) {
+            window.location.reload()
+            return
+          }
+          catchChunkError(fn, retriesLeft - 1, interval).then(resolve, reject)
+        }, interval)
+      })
+  })
+}
 
-const NegotiatorPage = React.lazy(() => catchChunkError(() => import('../components/pages/negotiator')));
-const LoginPage = React.lazy(() => catchChunkError(() => import('../components/pages/login')));
-const AuthenticatedPage = React.lazy(() => catchChunkError(() => import('../components/pages/authenticated')));
-const PropertiesPage = React.lazy(() => catchChunkError(() => import('../components/pages/properties')));
-const CompanyPage = React.lazy(() => catchChunkError(() => import('../components/pages/companies')));
-const CalendarPage = React.lazy(() => catchChunkError(() => import('../components/pages/calendar')));
+const NegotiatorPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/negotiator'))
+)
+const LoginPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/login'))
+)
+const AuthenticatedPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/authenticated'))
+)
+const PropertiesPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/properties'))
+)
+const CompanyPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/companies'))
+)
+const CalendarPage = React.lazy(() =>
+  catchChunkError(() => import('../components/pages/calendar'))
+)
 
 const Router = () => (
-	<BrowserRouter history={history}>
-		<React.Suspense fallback={null}>
-			<Switch>
-				<Route path={Routes.LOGIN} component={LoginPage} />
-				<PrivateRouteWrapper>
-					<Switch>
-						<Route path={Routes.COMPANY} component={CompanyPage} />
-						<Route path={Routes.PROPERTIES} component={PropertiesPage} />
-						<Route path={Routes.CALENDAR} component={CalendarPage} />
-						<Route path={Routes.NEGOTIATOR} component={NegotiatorPage} />
-						<Route path={Routes.HOME} component={AuthenticatedPage} />
-					</Switch>
-				</PrivateRouteWrapper>
-				<Redirect to={Routes.LOGIN} />
-			</Switch>
-		</React.Suspense>
-	</BrowserRouter>
-);
+  <BrowserRouter history={history}>
+    <React.Suspense fallback={null}>
+      <Switch>
+        <Route path={Routes.LOGIN} component={LoginPage} />
+        <PrivateRouteWrapper>
+          <Switch>
+            <Route path={Routes.COMPANY} component={CompanyPage} />
+            <Route path={Routes.PROPERTIES} component={PropertiesPage} />
+            <Route path={Routes.CALENDAR} component={CalendarPage} />
+            <Route path={Routes.NEGOTIATOR} component={NegotiatorPage} />
+            <Route path={Routes.HOME} component={AuthenticatedPage} />
+          </Switch>
+        </PrivateRouteWrapper>
+        <Redirect to={Routes.LOGIN} />
+      </Switch>
+    </React.Suspense>
+  </BrowserRouter>
+)
 
-export default Router;
+export default Router

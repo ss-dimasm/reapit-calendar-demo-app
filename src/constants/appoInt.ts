@@ -1,1 +1,1 @@
-export const MAX_STEP = 5;
+export const MAX_STEP = 5

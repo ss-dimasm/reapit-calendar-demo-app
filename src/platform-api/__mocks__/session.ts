@@ -1,4 +1,4 @@
-import { ReapitConnectSession } from '@reapit/connect-session';
+import { ReapitConnectSession } from '@reapit/connect-session'
 
 export const mockLoginIdentity = {
   email: 'name@mail.com',
@@ -9,13 +9,19 @@ export const mockLoginIdentity = {
   userCode: 'SOME_USER_ID',
   orgName: 'SOME_ORG_NAME',
   orgId: 'SOME_ORG_ID',
-  groups: ['AgencyCloudDeveloperEdition', 'OrganizationAdmin', 'ReapitUser', 'ReapitDeveloper', 'ReapitDeveloperAdmin'],
+  groups: [
+    'AgencyCloudDeveloperEdition',
+    'OrganizationAdmin',
+    'ReapitUser',
+    'ReapitDeveloper',
+    'ReapitDeveloperAdmin',
+  ],
   offGroupIds: 'MKV',
   offGrouping: true,
   offGroupName: 'Cool Office Group',
   officeId: 'MVK',
   orgProduct: 'agencyCloud',
-};
+}
 
 export const mockBrowserSession: ReapitConnectSession = {
   accessToken: JSON.stringify({
@@ -32,4 +38,4 @@ export const mockBrowserSession: ReapitConnectSession = {
     'cognito:groups': mockLoginIdentity.groups,
   }),
   loginIdentity: mockLoginIdentity,
-};
+}

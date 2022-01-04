@@ -17,7 +17,7 @@ describe('Router', () => {
         promiseFn.then((result) => {
           expect(result).toEqual(<div>Test</div>)
           done()
-        }),
+        })
       )
     })
   })

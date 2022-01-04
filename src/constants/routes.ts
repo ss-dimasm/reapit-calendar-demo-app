@@ -1,10 +1,10 @@
 const Routes = {
-	HOME: '/',
-	LOGIN: '/login',
-	PROPERTIES: '/properties',
-	COMPANY: '/company',
-	CALENDAR: '/calendar',
-	NEGOTIATOR: '/negotiator',
-};
+  HOME: '/',
+  LOGIN: '/login',
+  PROPERTIES: '/properties',
+  COMPANY: '/company',
+  CALENDAR: '/calendar',
+  NEGOTIATOR: '/negotiator',
+}
 
-export default Routes;
+export default Routes

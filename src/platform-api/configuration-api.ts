@@ -1,4 +1,4 @@
-import { ReapitConnectSession } from '@reapit/connect-session';
+import { ReapitConnectSession } from '@reapit/connect-session'
 import {
   CompanyModelPagedResult,
   ListItemModel,
@@ -7,32 +7,35 @@ import {
   PropertyModel,
   PropertyModelPagedResult,
   StaffModelPagedResult,
-} from '@reapit/foundations-ts-definitions';
+} from '@reapit/foundations-ts-definitions'
 
-import { URLS, BASE_HEADERS } from '../constants/api';
+import { URLS, BASE_HEADERS } from '../constants/api'
 
 export const configurationAppointmentsApiService = async (
   session: ReapitConnectSession
 ): Promise<Array<ListItemModel> | undefined> => {
   try {
-    const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_APPOINTMENT_TYPES}`, {
-      method: 'GET',
-      headers: {
-        ...BASE_HEADERS,
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_APPOINTMENT_TYPES}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
 
     if (response) {
-      const responseJson: Promise<ListItemModel[]> = response.json();
-      return responseJson;
+      const responseJson: Promise<ListItemModel[]> = response.json()
+      return responseJson
     }
 
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Configuration Appointment Types', err);
+    console.error('Error fetching Configuration Appointment Types', err)
   }
-};
+}
 
 /**
  * Properties Configuration
@@ -41,24 +44,27 @@ export const configurationPropertiesApiService = async (
   session: ReapitConnectSession
 ): Promise<PropertyModelPagedResult | undefined> => {
   try {
-    const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTIES_LIST}`, {
-      method: 'GET',
-      headers: {
-        ...BASE_HEADERS,
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTIES_LIST}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
 
     if (response) {
-      const responseJson: Promise<PropertyModelPagedResult> = response.json();
-      return responseJson;
+      const responseJson: Promise<PropertyModelPagedResult> = response.json()
+      return responseJson
     }
 
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Properties List', err);
+    console.error('Error fetching Properties List', err)
   }
-};
+}
 
 /**
  * Property Detail appear on modal
@@ -80,19 +86,19 @@ export const configurationPropertyDetailApiService = async (
           Authorization: `Bearer ${session.accessToken}`,
         },
       }
-    );
+    )
 
     if (response) {
-      const responseJson: Promise<PropertyModel> = response.json();
+      const responseJson: Promise<PropertyModel> = response.json()
 
-      return responseJson;
+      return responseJson
     }
 
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Property Model Details', err);
+    console.error('Error fetching Property Model Details', err)
   }
-};
+}
 
 /**
  * Get all properties images result
@@ -104,24 +110,28 @@ export const configurationPropertiesImagesApiService = async (
   session: ReapitConnectSession
 ): Promise<PropertyImageModelPagedResult | undefined> => {
   try {
-    const response = await fetch(`${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTY_IMAGES}`, {
-      method: 'GET',
-      headers: {
-        ...BASE_HEADERS,
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${window.reapit.config.platformApiUrl}${URLS.CONFIGURATION_PROPERTY_IMAGES}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
 
     if (response) {
-      const responseJson: Promise<PropertyImageModelPagedResult> = response.json();
-      return responseJson;
+      const responseJson: Promise<PropertyImageModelPagedResult> =
+        response.json()
+      return responseJson
     }
 
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Property Model Details', err);
+    console.error('Error fetching Property Model Details', err)
   }
-};
+}
 
 /**
  * Get Property Image result
@@ -134,24 +144,27 @@ export const configurationPropertyImagesApiService = async (
   uriParams: string | undefined
 ): Promise<PropertyImageModel | undefined> => {
   try {
-    const response = await fetch(`${window.reapit.config.platformApiUrl}${uriParams}`, {
-      method: 'GET',
-      headers: {
-        ...BASE_HEADERS,
-        Authorization: `Bearer ${session.accessToken}`,
-      },
-    });
+    const response = await fetch(
+      `${window.reapit.config.platformApiUrl}${uriParams}`,
+      {
+        method: 'GET',
+        headers: {
+          ...BASE_HEADERS,
+          Authorization: `Bearer ${session.accessToken}`,
+        },
+      }
+    )
 
     if (response) {
-      const responseJson: Promise<PropertyImageModel> = response.json();
-      return responseJson;
+      const responseJson: Promise<PropertyImageModel> = response.json()
+      return responseJson
     }
 
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Property Model Details', err);
+    console.error('Error fetching Property Model Details', err)
   }
-};
+}
 
 /**
  * Get all resource from Company
@@ -161,14 +174,14 @@ export const configurationCompaniesApiServices = async (
   page?: number,
   idCompany?: string | number
 ): Promise<CompanyModelPagedResult | undefined> => {
-  let fixUri: string;
+  let fixUri: string
 
   if (idCompany !== undefined) {
-    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.SINGLE_COMPANY}${idCompany}`;
+    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.SINGLE_COMPANY}${idCompany}`
   } else if (page === undefined) {
-    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.ALL}`;
+    fixUri = `${window.reapit.config.platformApiUrl}${URLS.COMPANIES.ALL}`
   } else {
-    fixUri = `${window.reapit.config.platformApiUrl}${page}`;
+    fixUri = `${window.reapit.config.platformApiUrl}${page}`
   }
 
   try {
@@ -178,17 +191,17 @@ export const configurationCompaniesApiServices = async (
         ...BASE_HEADERS,
         Authorization: `Bearer ${session.accessToken}`,
       },
-    });
+    })
 
     if (response) {
-      const responseJson: Promise<CompanyModelPagedResult> = response.json();
-      return responseJson;
+      const responseJson: Promise<CompanyModelPagedResult> = response.json()
+      return responseJson
     }
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Companies Pages Result', err);
+    console.error('Error fetching Companies Pages Result', err)
   }
-};
+}
 
 export const configurationCompaniesEmployeeApiServices = async (
   session: ReapitConnectSession,
@@ -204,14 +217,14 @@ export const configurationCompaniesEmployeeApiServices = async (
           Authorization: `Bearer ${session.accessToken}`,
         },
       }
-    );
+    )
 
     if (response) {
-      const responseJson: Promise<StaffModelPagedResult> = response.json();
-      return responseJson;
+      const responseJson: Promise<StaffModelPagedResult> = response.json()
+      return responseJson
     }
-    throw new Error('No response returned by API');
+    throw new Error('No response returned by API')
   } catch (err) {
-    console.error('Error fetching Companies Pages Result', err);
+    console.error('Error fetching Companies Pages Result', err)
   }
-};
+}

@@ -1,5 +1,8 @@
-import React, { FC, ReactElement } from 'react';
-import { StaffModel, StaffModelPagedResult } from '@reapit/foundations-ts-definitions';
+import React, { FC, ReactElement } from 'react'
+import {
+  StaffModel,
+  StaffModelPagedResult,
+} from '@reapit/foundations-ts-definitions'
 import {
   CardHeading,
   CardListIcon,
@@ -9,27 +12,29 @@ import {
   CardWrap,
   Icon,
   Loader,
-} from '@reapit/elements';
+} from '@reapit/elements'
 
 type StaffModelPagedResultType = {
-  data: StaffModelPagedResult | undefined;
-};
+  data: StaffModelPagedResult | undefined
+}
 type StaffModelSingleType = {
-  data: StaffModel | undefined;
-};
-const StaffCompanies: FC<StaffModelPagedResultType> = (props: StaffModelPagedResultType): ReactElement => {
-  const { data } = props;
+  data: StaffModel | undefined
+}
+const StaffCompanies: FC<StaffModelPagedResultType> = (
+  props: StaffModelPagedResultType
+): ReactElement => {
+  const { data } = props
 
   if (data === undefined) {
     return (
       <>
-        <Loader label='fetching data staff' />
+        <Loader label="fetching data staff" />
       </>
-    );
+    )
   }
 
   return (
-    <div className='el-mt6'>
+    <div className="el-mt6">
       <CardWrap>
         {data._embedded === undefined ? (
           <CardHeading>No Staff that already Registered</CardHeading>
@@ -37,28 +42,30 @@ const StaffCompanies: FC<StaffModelPagedResultType> = (props: StaffModelPagedRes
           <>
             <CardHeading>Staff List</CardHeading>
             {data._embedded.map((employee: StaffModel) => {
-              return <EmployeeChild data={employee} key={employee.name} />;
+              return <EmployeeChild data={employee} key={employee.name} />
             })}
           </>
         )}
       </CardWrap>
     </div>
-  );
-};
+  )
+}
 
-const EmployeeChild: FC<StaffModelSingleType> = (props: StaffModelSingleType): ReactElement => {
-  const { data } = props;
+const EmployeeChild: FC<StaffModelSingleType> = (
+  props: StaffModelSingleType
+): ReactElement => {
+  const { data } = props
 
   return (
     <CardListItem>
       <CardListIcon>
-        <Icon icon='usernameSystem' />
+        <Icon icon="usernameSystem" />
       </CardListIcon>
       <CardListItemTextWrap>
         <CardListItemTextPrimary>{data?.name}</CardListItemTextPrimary>
         <CardListItemTextPrimary>{data?.email}</CardListItemTextPrimary>
       </CardListItemTextWrap>
     </CardListItem>
-  );
-};
-export default StaffCompanies;
+  )
+}
+export default StaffCompanies

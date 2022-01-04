@@ -1,9 +1,9 @@
-import { NegotiatorModel } from '@reapit/foundations-ts-definitions';
+import { NegotiatorModel } from '@reapit/foundations-ts-definitions'
 
 type ResourceNotFoundType = {
-  statusCode: number;
-  dateTime: string;
-  description: string;
-};
+  statusCode: number
+  dateTime: string
+  description: string
+}
 
-export type NegotiatorModelType = NegotiatorModel | ResourceNotFoundType;
+export type NegotiatorModelType = NegotiatorModel | ResourceNotFoundType
