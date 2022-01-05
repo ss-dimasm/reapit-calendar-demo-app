@@ -22,7 +22,7 @@ const ModalDetail: FC<ModalDetailType> = (props): ReactElement => {
   if (!negotiatorData?.id)
     return (
       <div className="el-flex el-flex-justify-center">
-        <Subtitle>No negotiator found, We can't proceed further</Subtitle>
+        <Subtitle>No negotiator found, We can`&apos;t proceed further</Subtitle>
       </div>
     )
 

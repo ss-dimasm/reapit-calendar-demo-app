@@ -4,24 +4,13 @@ import React, { useState, useEffect, FC, ReactElement } from 'react'
 import {
   AppointmentModelPagedResult,
   NegotiatorModel,
-  PropertyImageModelPagedResult,
-  PropertyModel,
 } from '@reapit/foundations-ts-definitions'
-import { useReapitConnect } from '@reapit/connect-session'
 
-import { reapitConnectBrowserSession } from '../../../../core/connect-session'
-import { getAppointmentDateByNegotiatorId } from '../../../../platform-api/negotiatorResource'
 import Loading from '../../utils/Loading'
-import {
-  Calendar,
-  Event,
-  momentLocalizer,
-  View,
-  Views,
-} from 'react-big-calendar'
+import { Calendar, Event, momentLocalizer } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 import moment from 'moment'
-import { Button, FlexContainer, Icon, useModal } from '@reapit/elements'
+import { useModal } from '@reapit/elements'
 import AgentPropertyData from './AgentPropertyData'
 
 type AgentCalendarProps = {
@@ -29,7 +18,7 @@ type AgentCalendarProps = {
   appointmentData: AppointmentModelPagedResult | undefined
 }
 const AgentCalendar: FC<AgentCalendarProps> = (props): ReactElement => {
-  const { appointmentData, negotiatorId } = props
+  const { appointmentData } = props
   const [appointmentsEventData, setAppointmentsEventData] = useState<Event[]>()
 
   const {

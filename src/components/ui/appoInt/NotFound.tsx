@@ -7,7 +7,7 @@ export const NotFound: FC = (): ReactElement => {
     <CardWrap className="el-mt6 el-w9 el-mx-auto">
       <CardHeading>Unfortunately</CardHeading>
       <CardSubHeading>
-        We could'nt find Property that match with the address
+        We could`&apos;nt find Property that match with the address
       </CardSubHeading>
     </CardWrap>
   )

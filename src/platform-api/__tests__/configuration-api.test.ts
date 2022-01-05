@@ -21,13 +21,13 @@ describe('configurationAppointmentsApiService', () => {
     expect(mockedFetch).toHaveBeenCalledTimes(1)
   })
 
-  //   it('should catch an error if no response from config service', async () => {
-  //     const errorSpy = jest.spyOn(console, 'error')
-  //     mockedFetch.mockReturnValueOnce(undefined as any)
-  //     await configurationAppointmentsApiService(mockBrowserSession)
-  //     expect(errorSpy).toHaveBeenCalledWith(
-  //       'Error fetching Configuration Appointment Types',
-  //       'No response returned by API',
-  //     )
-  //   })
+  it('should catch an error if no response from config service', async () => {
+    const errorSpy = jest.spyOn(console, 'error')
+    mockedFetch.mockReturnValueOnce(undefined as any)
+    await configurationAppointmentsApiService(mockBrowserSession)
+    expect(errorSpy).toHaveBeenCalledWith(
+      'Error fetching Configuration Appointment Types',
+      'No response returned by API'
+    )
+  })
 })

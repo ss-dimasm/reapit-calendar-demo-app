@@ -5,13 +5,7 @@ import { ModalReceiptType } from '../../../../interfaces/appointmentInterfaces'
 
 const ModalReceipt: FC<ModalReceiptType> = (props): ReactElement => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const {
-    userInfoData,
-    negotiatorData,
-    finalReservedAppointment,
-    changeStep,
-    closeModalProperty,
-  } = props
+  const { negotiatorData, finalReservedAppointment, closeModalProperty } = props
   // show information that email already sent to email
   const text = `We have already serve your appointment date with ${
     negotiatorData?.name
